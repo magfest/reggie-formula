@@ -1,0 +1,121 @@
+reggie:
+  user: reggie
+  group: reggie
+  install_dir: /srv/reggie
+
+  sideboard:
+    config:
+      debug: False
+      priority_plugins: ['uber']
+
+      cherrypy:
+        engine.autoreload.on: False
+        server.socket_host: '0.0.0.0'
+        server.socket_port: 8282
+        server.socket_timeout: 1
+        server.thread_pool: 100
+        tools.proxy.debug: False
+        tools.proxy.on: True
+        tools.sessions.host: localhost
+        tools.sessions.password: reggie
+        tools.sessions.port: 6379
+        tools.sessions.storage_type: redis
+        tools.sessions.timeout: 4320  # 3 days (in minutes)
+
+      loggers:
+        cherrypy.access: DEBUG
+
+      handlers:
+        syslog:
+          class: logging.handlers.SysLogHandler
+          address: /dev/log
+          formatter: indent_multiline
+
+        stdout:
+          class: logging.StreamHandler
+          stream: ext://sys.stdout
+          formatter: indent_multiline
+
+  plugins:
+    magprime:
+      name: magprime
+      source: https://github.com/magfest/magprime.git
+
+    ubersystem:
+      name: uber
+      source: https://github.com/magfest/ubersystem.git
+      config:
+        path: /uber
+
+        organization_name: MAGFest INC
+        event_name: Super
+        year: 9000
+        code_of_conduct: http://magfest.org/codeofconduct
+
+        regdesk_email: MAGFest Registration <regsupport@magfest.org>
+        stops_sig: |
+            Thank You,
+            Staff Operations: MAGFest Inc.
+            http://www.magfest.org
+        collect_exact_birthdate: True
+        event_timezone: US/Eastern
+        contact_url: http://magfest.org/contact
+        consent_form_url: ''
+        prereg_confirm_email_enabled: True
+        security_email: MAGFest Security <security@magfest.org>
+        guest_email: MAGFest Guests <guests@magfest.org>
+
+        kiosk_cc_enabled: True
+        attractions_enabled: False
+        separate_staff_merch: False
+
+        hotels_enabled: True
+        mits_enabled: False
+        mivs_enabled: False
+        panels_enabled: True
+
+        shirt_sizes:
+          no shirt: 0
+          small: 1
+          medium: 2
+          large: 3
+          x-large: 4
+          xx-large: 5
+          xxx-large: 6
+          xxxx-large: 11
+          xxxxx-large: 12
+          small (female): 7
+          medium (female): 8
+          large (female): 9
+          x-large (female): 10
+          xx-large (female): 13
+
+        extra_ribbon_types:
+          band: RockStar
+
+        sandwich:
+          turkey: Turkey
+          ham: Ham
+          cheese: Cheese
+          peanut_butter: Peanut Butter
+          jelly: Jelly
+          salad: Prefer salad instead of sandwich
+
+        food_restriction:
+          gluten: No gluten
+          pork: No pork
+          nuts: No nuts
+          vegan: Vegetarian/Vegan
+
+        dealer_wares:
+          vgames: Video Games
+          tshirts: T-shirts
+          figures: Figures
+          general: General Merchandise
+          prints: Prints
+          plushes: Plushes
+          lanyards: Lanyards/Keychains
+          perler: Perler Beads
+          jewelry: Jewelry
+          bath: Bath Products
+          handmade: General Handmade
