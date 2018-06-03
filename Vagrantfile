@@ -4,7 +4,8 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.require_version ">= 2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-    config.vm.box = "ubuntu/xenial64"
+    config.vm.box = "bento/ubuntu-18.04"
+    config.vm.hostname = "localhost"
 
     config.vm.synced_folder ".", "/home/vagrant/reggie-formula", create: true
 
@@ -26,14 +27,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.memory = 1536
         vb.cpus = 2
 
-        # Suppress output of logfile "ubuntu-xenial-16.04-cloudimg-console.log"
-        vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
-
-        # Allow symlinks to be created in /home/vagrant/reggie-deploy.
-        # Modify "home_vagrant_reggie-deploy" to be different if you change the path.
+        # Allow symlinks to be created in /home/vagrant/reggie-formula.
+        # Modify "home_vagrant_reggie-formula" to be different if you change the path.
         # NOTE: requires Vagrant to be run as administrator for this to work.
-        vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/home_vagrant_reggie-deploy", "1"]
+        vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/home_vagrant_reggie-formula", "1"]
     end
+
+    config.vm.provision :shell, inline: <<-SHELL
+        set -e
+        export DEBIAN_FRONTEND=noninteractive
+        export DEBIAN_PRIORITY=critical
+        sudo -E apt-get -qy update
+        sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
+        sudo -E apt-get -qy autoclean
+    SHELL
 
     config.vm.provision :salt do |salt|
         salt.colorize = true
@@ -42,4 +49,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         salt.minion_id = "vagrant"
         salt.run_highstate = true
     end
+
+    config.vm.post_up_message = <<-MESSAGE
+        All done!
+
+        To login to your new development machine run:
+            vagrant ssh
+
+        Once logged in, the machine can be reconfigured using:
+            sudo salt-call --local state.apply
+
+        Or using the shortcut alias for "sudo salt-call --local":
+            salt-local state.apply
+
+        Or using the shortcut alias for "salt-local state.apply":
+            salt-apply
+
+    MESSAGE
 end

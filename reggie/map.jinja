@@ -1,11 +1,11 @@
+{{ salt['monkeypatch.ordered_yaml']() }}
 {% import_yaml 'reggie/defaults.yaml' as defaults %}
 
 {% set os_family_map = salt['grains.filter_by']({
     'Debian': {},
     'RedHat': {},
   },
-  grain='os_family',
-  merge=salt['pillar.get']('reggie'))
+  grain='os_family')
 %}
 
 {% do defaults.reggie.update(os_family_map) %}
@@ -13,5 +13,6 @@
 {% set reggie = salt['pillar.get'](
   'reggie',
   default=defaults.reggie,
-  merge=True)
+  merge=True,
+  merge_nested_lists=True)
 %}
