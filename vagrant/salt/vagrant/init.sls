@@ -16,4 +16,4 @@
 /etc/salt/minion:
   file.managed:
     - name: /etc/salt/minion
-    - source: salt://salt_minion.conf
+    - source: salt://vagrant/salt_minion.conf
