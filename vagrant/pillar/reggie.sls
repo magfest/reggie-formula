@@ -4,7 +4,12 @@ reggie:
   install_dir: /home/vagrant/reggie-formula/reggie-deploy
 
   plugins:
-    ubersystem:
-      config:
-        celery:
-          beat_schedule_filename: /home/vagrant/reggie-formula/reggie-deploy/data/celerybeat-schedule
+    magprime:
+      name: magprime
+      source: https://github.com/magfest/magprime.git
+
+redis:
+  user: reggie
+  pass: reggie
+  port: 6379
+  bind: 127.0.0.1

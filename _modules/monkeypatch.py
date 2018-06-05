@@ -26,3 +26,5 @@ def ordered_yaml():
             return _original_SaltYamlSafeLoader_init(self, stream, dictclass)
         _ordered_SaltYamlSafeLoader_init._patched = True
         salt.utils.yamlloader.SaltYamlSafeLoader.__init__ = _ordered_SaltYamlSafeLoader_init
+
+    return ''

@@ -4,11 +4,13 @@ reggie:
   install_dir: /srv/reggie
 
   db:
+    dialect: postgres
+    driver: ''
     username: reggie
     password: reggie
     host: localhost
     port: 5432
-    database: reggie
+    name: reggie
 
   sideboard:
     config:
@@ -24,8 +26,8 @@ reggie:
         tools.proxy.debug: False
         tools.proxy.on: True
         tools.sessions.host: localhost
-        tools.sessions.password: reggie
         tools.sessions.port: 6379
+        tools.sessions.password: reggie
         tools.sessions.storage_type: redis
         tools.sessions.timeout: 4320  # 3 days (in minutes)
 
@@ -48,12 +50,8 @@ reggie:
       name: uber
       source: https://github.com/magfest/ubersystem.git
       config:
-        {% set hostname = 'reggie.events' -%}
-        {%- set url_root = 'https://' ~ hostname -%}
-        {%- set url_path = '/app' -%}
-
-        path: '{{ url_path }}'
-        hostname: '{{ hostname }}'
+        path: /app
+        hostname: reggie.events
 
         # url_root should be the public-facing root of what you type
         # to get to this uber instance. do not include the url_prefix/path here.
@@ -62,8 +60,8 @@ reggie:
         # facing address and NOT the internal cherrypy server:
         # url_root: http://public.facing.domain.com
         #
-        url_root: {{ url_root }}
-        url_base: {{ url_root }}{{ url_path }}
+        url_root: 'https://%(hostname)s'
+        url_base: '%(url_root)s%(path)s'
 
         organization_name: MAGFest INC
         year: 2019
@@ -193,12 +191,10 @@ reggie:
         default_loadin_minutes: 20
         default_performance_minutes: 40
 
-        celery:
-          beat_schedule_filename: /srv/reggie/data/celerybeat-schedule
+        celery: {}
 
         secret:
-          broker_url: amqp://celery:celery@localhost:5672/uber
-          sqlalchemy_url: postgresql://reggie:reggie@localhost:5432/reggie
+          broker_url: amqp://reggie:reggie@localhost:5672/reggie
 
         dates:
           prereg_open: 2018-05-01
@@ -647,7 +643,3 @@ reggie:
         volunteer_checklist:
           4: hotel_requests/hotel_item.html
           5: signups/shifts_item.html
-
-    magprime:
-      name: magprime
-      source: https://github.com/magfest/magprime.git
