@@ -1,14 +1,7 @@
 {%- from 'reggie/map.jinja' import reggie with context -%}
-{%- from 'reggie/dump_ini.jinja' import dump_ini with context -%}
 
 include:
   - reggie.install
-
-postgresql install:
-  pkg.installed:
-    - pkgs:
-      - postgresql
-      - postgresql-contrib
 
 reggie db user:
   postgres_user.present:

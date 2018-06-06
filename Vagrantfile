@@ -7,7 +7,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "bento/ubuntu-18.04"
     config.vm.hostname = "localhost"
 
-    config.vm.network :forwarded_port, guest: 80, host: 8000 # nginx http proxy
+    config.vm.network :forwarded_port, guest: 8000, host: 8000 # nginx http proxy
     config.vm.network :forwarded_port, guest: 4443, host: 4443 # nginx https proxy
     config.vm.network :forwarded_port, guest: 8282, host: 8282 # cherrypy backend
 
@@ -45,7 +45,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # Upgrade all packages to the latest version, very slow
         # sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
         # sudo -E apt-get -qy autoclean
-        sudo -E apt-get -qy install libssh-dev python-git swapspace
+        sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install libssh-dev python-git swapspace
     SHELL
 
     config.vm.provision :salt do |salt|
@@ -54,6 +54,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         salt.minion_config = "vagrant/salt/vagrant/salt_minion.conf"
         salt.minion_id = "vagrant"
         salt.run_highstate = true
+        salt.colorize = true
+        salt.log_level = "info"
+        salt.verbose = true
     end
 
     config.vm.post_up_message = <<-MESSAGE
@@ -73,6 +76,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         The reggie virtualenv has been added to your path, along with a custom python startup:
             export PYTHONSTARTUP='/home/vagrant/.pythonstartup.py'
             export PATH="reggie-formula/reggie-deploy/env/bin:$PATH"
+
+        The following services have been installed with systemd:
+            reggie
+              +- reggie-web
+              +- reggie-worker
+              +- reggie-scheduler
 
     MESSAGE
 end

@@ -1,5 +1,5 @@
 {%- from 'reggie/map.jinja' import reggie with context -%}
-{%- from 'reggie/dump_ini.jinja' import dump_ini with context -%}
+{%- from 'reggie/macros.jinja' import dump_ini with context -%}
 
 include:
   - reggie.python
@@ -11,6 +11,29 @@ reggie group:
 reggie user:
   user.present:
     - name: {{ reggie.user }}
+
+reggie data_dir:
+  file.directory:
+    - name: {{ reggie.data_dir }}
+    - user: {{ reggie.user }}
+    - group: {{ reggie.group }}
+    - makedirs: True
+
+reggie service:
+  file.managed:
+    - name: /lib/systemd/system/reggie.service
+    - contents: |
+        [Unit]
+        Description=Reggie services collection
+
+        [Service]
+        Type=oneshot
+        ExecStart=/bin/true
+        RemainAfterExit=yes
+
+        [Install]
+        WantedBy=multi-user.target
+    - template: jinja
 
 sideboard git latest:
   git.latest:

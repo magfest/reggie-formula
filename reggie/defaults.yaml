@@ -35,11 +35,6 @@ reggie:
         cherrypy.access: DEBUG
 
       handlers:
-        syslog:
-          class: logging.handlers.SysLogHandler
-          address: /dev/log
-          formatter: indent_multiline
-
         stdout:
           class: logging.StreamHandler
           stream: ext://sys.stdout
