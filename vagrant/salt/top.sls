@@ -1,7 +1,12 @@
 base:
   'vagrant':
-    - swap
-    - devenv
-    - reggie.celery_beat
-    - reggie.celery_worker
+    - vagrant
+    - reggie.baseline
+    - postgres
+    - rabbitmq
+    - redis.server
+    - reggie.db
+    - reggie.tasks.scheduler
+    - reggie.tasks.worker
     - reggie.web
+    - reggie.devenv

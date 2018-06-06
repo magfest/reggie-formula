@@ -1,0 +1,8 @@
+{%- from 'reggie/map.jinja' import reggie with context -%}
+
+export PYTHONSTARTUP="$HOME/.pythonstartup.py"
+export PATH="{{ reggie.install_dir }}/env/bin:$PATH"
+alias salt-local='sudo salt-call --local'
+alias salt-apply='sudo salt-call --local state.apply'
+alias run_server='{{ reggie.install_dir }}/env/bin/python {{ reggie.install_dir }}/sideboard/run_server.py'
+source {{ reggie.install_dir }}/env/bin/activate

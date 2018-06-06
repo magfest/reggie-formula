@@ -7,6 +7,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "bento/ubuntu-18.04"
     config.vm.hostname = "localhost"
 
+    config.vm.network :forwarded_port, guest: 8000, host: 8000 # nginx http proxy
+    config.vm.network :forwarded_port, guest: 4443, host: 4443 # nginx https proxy
+    config.vm.network :forwarded_port, guest: 8282, host: 8282 # cherrypy backend
+
     config.vm.synced_folder ".", "/home/vagrant/reggie-formula", create: true
 
     # No good can come from updating plugins.
@@ -38,16 +42,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         export DEBIAN_FRONTEND=noninteractive
         export DEBIAN_PRIORITY=critical
         sudo -E apt-get -qy update
-        sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
-        sudo -E apt-get -qy autoclean
+        # Upgrade all packages to the latest version, very slow
+        # sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
+        # sudo -E apt-get -qy autoclean
+        sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install libssh-dev python-git swapspace
     SHELL
 
     config.vm.provision :salt do |salt|
         salt.colorize = true
         salt.masterless = true
-        salt.minion_config = "vagrant/salt_minion.conf"
+        salt.minion_config = "vagrant/salt/vagrant/salt_minion.conf"
         salt.minion_id = "vagrant"
         salt.run_highstate = true
+        salt.colorize = true
+        salt.log_level = "info"
+        salt.verbose = true
     end
 
     config.vm.post_up_message = <<-MESSAGE
@@ -56,14 +65,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         To login to your new development machine run:
             vagrant ssh
 
-        Once logged in, the machine can be reconfigured using:
+        The machine is configured using salt locally:
             sudo salt-call --local state.apply
 
-        Or using the shortcut alias for "sudo salt-call --local":
-            salt-local state.apply
+        Several shortcut aliases have been installed for you:
+            alias salt-local='sudo salt-call --local'
+            alias salt-apply='sudo salt-call --local state.apply'
+            alias run_server='reggie-formula/reggie-deploy/env/bin/python reggie-formula/reggie-deploy/run_server.py'
 
-        Or using the shortcut alias for "salt-local state.apply":
-            salt-apply
+        The reggie virtualenv has been added to your path, along with a custom python startup:
+            export PYTHONSTARTUP='/home/vagrant/.pythonstartup.py'
+            export PATH="reggie-formula/reggie-deploy/env/bin:$PATH"
+
+        The following services have been installed with systemd:
+            reggie
+              +- reggie-web
+              +- reggie-worker
+              +- reggie-scheduler
 
     MESSAGE
 end

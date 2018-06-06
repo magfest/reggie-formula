@@ -1,5 +1,5 @@
-{{ salt['monkeypatch.ordered_yaml']() }}
-{% import_yaml 'reggie/defaults.yaml' as defaults %}
+{%- do salt['monkeypatch.ordered_yaml']() -%}
+{% load_yaml as defaults %}{% include 'reggie/defaults.yaml' with context %}{% endload %}
 
 {% set os_family_map = salt['grains.filter_by']({
     'Debian': {},
@@ -9,10 +9,28 @@
 %}
 
 {% do defaults.reggie.update(os_family_map) %}
+{% set reggie = salt['pillar.get']('reggie', default=defaults.reggie, merge=True) %}
 
-{% set reggie = salt['pillar.get'](
-  'reggie',
-  default=defaults.reggie,
-  merge=True,
-  merge_nested_lists=True)
-%}
+{% if 'data_dir' not in reggie %}
+  {% do reggie.update({
+    'data_dir': reggie.install_dir ~ '/data'
+  }) %}
+{% endif %}
+
+{% if 'beat_schedule_filename' not in reggie.plugins.ubersystem.config.celery %}
+  {% do reggie.plugins.ubersystem.config.celery.update({
+    'beat_schedule_filename': reggie.data_dir ~ '/celerybeat-schedule.db'
+  }) %}
+{% endif %}
+
+{% if 'sqlalchemy_url' not in reggie.plugins.ubersystem.config.secret %}
+  {% do reggie.plugins.ubersystem.config.secret.update({
+    'sqlalchemy_url': reggie.db.dialect ~
+      ('+' ~ reggie.db.driver if reggie.db.driver else '') ~ '://' ~
+      reggie.db.username ~ ':' ~
+      reggie.db.password ~ '@' ~
+      reggie.db.host ~ ':' ~
+      reggie.db.port ~ '/' ~
+      reggie.db.name
+  }) %}
+{% endif %}
