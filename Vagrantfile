@@ -7,7 +7,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "bento/ubuntu-18.04"
     config.vm.hostname = "localhost"
 
-    config.vm.network :forwarded_port, guest: 8000, host: 8000 # nginx http proxy
+    config.vm.network :forwarded_port, guest: 80, host: 8000 # nginx http proxy
     config.vm.network :forwarded_port, guest: 4443, host: 4443 # nginx https proxy
     config.vm.network :forwarded_port, guest: 8282, host: 8282 # cherrypy backend
 
