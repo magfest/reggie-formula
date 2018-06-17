@@ -39,10 +39,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.provision :shell, inline: <<-SHELL
         set -e
-        export DEBIAN_FRONTEND=noninteractive
-        export DEBIAN_PRIORITY=critical
-        sudo -E apt-get -qy update
         # Upgrade all packages to the latest version, very slow
+        # export DEBIAN_FRONTEND=noninteractive
+        # export DEBIAN_PRIORITY=critical
+        # sudo -E apt-get -qy update
         # sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
         # sudo -E apt-get -qy autoclean
         sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install libssh-dev python-git swapspace
@@ -82,6 +82,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               +- reggie-web
               +- reggie-worker
               +- reggie-scheduler
+
+        You can access the web interface at:
+            http://localhost:8282
+            Username: magfest@example.com
+            Password: magfest
 
     MESSAGE
 end
