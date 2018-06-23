@@ -1,3 +1,7 @@
+# ============================================================================
+# Installs the Python packages and libraries required by reggie.
+# ============================================================================
+
 python install:
   pkg.installed:
     - reload_modules: True
@@ -12,10 +16,6 @@ python install:
       - libcap-dev       # for python-prctl
       - libjpeg-dev      # for treepoem
       - ghostscript      # for treepoem
-
-pip install virtualenv:
   pip.installed:
     - name: virtualenv
     - bin_env: /usr/bin/pip3
-    - require:
-      - python install

@@ -1,10 +1,11 @@
-/root/.bash_aliases:
-  file.managed:
-    - name: /root/.bash_aliases
-    - source: salt://reggie/devenv/files/bash_aliases
-    - template: jinja
+# ============================================================================
+# Sets up a nice dev environment with a helpful Python REPL and bash aliases.
+# ============================================================================
 
-/root/.pythonstartup.py:
+{% for file in ['bash_aliases', 'pythonstartup.py'] %}
+/root/.{{ file }}:
   file.managed:
-    - name: /root/.pythonstartup.py
-    - source: salt://reggie/devenv/files/pythonstartup.py
+    - name: /root/.{{ file }}
+    - source: salt://reggie/devenv/files/{{ file }}
+    - template: jinja
+{% endfor %}
