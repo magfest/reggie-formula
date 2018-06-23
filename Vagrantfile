@@ -7,7 +7,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "bento/ubuntu-18.04"
     config.vm.hostname = "localhost"
 
-    config.vm.network :forwarded_port, guest: 80, host: 8000 # nginx http proxy
+    config.vm.network :forwarded_port, guest: 8000, host: 8000 # nginx http proxy
     config.vm.network :forwarded_port, guest: 4443, host: 4443 # nginx https proxy
     config.vm.network :forwarded_port, guest: 8282, host: 8282 # cherrypy backend
 
@@ -51,7 +51,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision :salt do |salt|
         salt.colorize = true
         salt.masterless = true
-        salt.minion_config = "vagrant/salt/vagrant/salt_minion.conf"
+        salt.minion_config = "vagrant/salt/vagrant/files/salt_minion.conf"
         salt.minion_id = "vagrant"
         salt.run_highstate = true
         salt.colorize = true
@@ -60,33 +60,33 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     config.vm.post_up_message = <<-MESSAGE
-        All done!
+  All done!
 
-        To login to your new development machine run:
-            vagrant ssh
+  To login to your new development machine run:
+      vagrant ssh
 
-        The machine is configured using salt locally:
-            sudo salt-call --local state.apply
+  The machine is configured using salt locally:
+      sudo salt-call --local state.apply
 
-        Several shortcut aliases have been installed for you:
-            alias salt-local='sudo salt-call --local'
-            alias salt-apply='sudo salt-call --local state.apply'
-            alias run_server='reggie-formula/reggie-deploy/env/bin/python reggie-formula/reggie-deploy/run_server.py'
+  Several shortcut aliases have been installed for you:
+      alias salt-local='sudo salt-call --local'
+      alias salt-apply='sudo salt-call --local state.apply'
+      alias run_server='reggie-formula/reggie-deploy/env/bin/python reggie-formula/reggie-deploy/run_server.py'
 
-        The reggie virtualenv has been added to your path, along with a custom python startup:
-            export PYTHONSTARTUP='/home/vagrant/.pythonstartup.py'
-            export PATH="reggie-formula/reggie-deploy/env/bin:$PATH"
+  The reggie virtualenv has been added to your path, along with a custom python startup:
+      export PYTHONSTARTUP='/home/vagrant/.pythonstartup.py'
+      export PATH="reggie-formula/reggie-deploy/env/bin:$PATH"
 
-        The following services have been installed with systemd:
-            reggie
-              +- reggie-web
-              +- reggie-worker
-              +- reggie-scheduler
+  The following services have been installed with systemd:
+      reggie
+        +- reggie-web
+        +- reggie-worker
+        +- reggie-scheduler
 
-        You can access the web interface at:
-            http://localhost:8282
-            Username: magfest@example.com
-            Password: magfest
+  You can access the web interface at:
+      https://localhost:4443
+      Username: magfest@example.com
+      Password: magfest
 
     MESSAGE
 end

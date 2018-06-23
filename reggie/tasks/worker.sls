@@ -1,5 +1,5 @@
 {%- from 'reggie/map.jinja' import reggie with context -%}
-{%- from 'reggie/macros.jinja' import systemd_service with context -%}
+{%- from 'reggie/macros.jinja' import systemd_service with context %}
 
 {{ systemd_service(
     'reggie-worker',

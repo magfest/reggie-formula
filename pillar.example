@@ -1,0 +1,29 @@
+reggie:
+  user: reggie
+  group: reggie
+  install_dir: /srv/reggie-deploy
+  data_dir: /srv/data
+
+  plugins:
+    magprime:
+      name: magprime
+      source: https://github.com/magfest/magprime.git
+
+  db:
+    dialect: postgres
+    driver: ''
+    username: reggie
+    password: reggie
+    host: localhost
+    port: 5432
+    name: reggie
+
+  sideboard:
+    config:
+      debug: False
+      priority_plugins: ['uber', 'magprime']
+
+      cherrypy:
+        engine.autoreload.on: False
+        server.socket_host: '127.0.0.1'
+        server.socket_port: 8282

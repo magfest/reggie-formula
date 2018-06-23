@@ -1,14 +1,18 @@
-{%- from 'reggie/map.jinja' import reggie with context -%}
-{%- from 'reggie/macros.jinja' import dump_ini with context -%}
+# ============================================================================
+# Installs the reggie source code and creates a Python virtual environment
+# ============================================================================
+
+{%- from 'reggie/map.jinja' import reggie with context %}
+{%- from 'reggie/macros.jinja' import dump_ini with context %}
 
 include:
+  - reggie.baseline
   - reggie.python
 
-reggie group:
+# Create the reggie user and group
+reggie user:
   group.present:
     - name: {{ reggie.group }}
-
-reggie user:
   user.present:
     - name: {{ reggie.user }}
 
@@ -48,7 +52,6 @@ chown {{ reggie.user }} {{ reggie.install_dir }}:
         find {{ reggie.install_dir }} -type d \! -group {{ reggie.group }} | grep -q "."
     - require:
       - reggie user
-      - reggie group
       - sideboard git latest
 
 reggie virtualenv:
