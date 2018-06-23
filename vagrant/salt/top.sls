@@ -1,9 +1,10 @@
 base:
   'vagrant':
     - vagrant
+    - haproxy
+    - nginx
     - postgres
     - rabbitmq
-    - nginx
     - redis.server
     - reggie.db
     - reggie.tasks.scheduler
