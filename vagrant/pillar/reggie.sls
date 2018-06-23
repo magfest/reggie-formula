@@ -1,3 +1,9 @@
+{%- set certs_dir = '/etc/ssl/certs' -%}
+
+ssl:
+  dir: /etc/ssl
+  certs_dir: {{ certs_dir }}
+
 reggie:
   user: vagrant
   group: vagrant
@@ -10,14 +16,51 @@ reggie:
       source: https://github.com/magfest/magprime.git
 
 
+haproxy:
+  proxy:
+    enabled: True
+    mode: http
+    logging: syslog
+    maxconn: 1024
+    timeout:
+      connect: 5000
+      client: 50000
+      server: 50000
+    listen:
+      reggie_load_balancer:
+        mode: http
+        acl:
+          header_location_exists: 'res.hdr(Location) -m found'
+          path_starts_with_app: 'path_beg -i /app'
+          path_starts_with_profiler: 'path_beg -i /profiler'
+        http_response:
+          - action: 'replace-value Location https://([^/]*)(?:/app)?(.*) https://\1:4443\2'
+            condition: 'if header_location_exists'
+        http_request:
+          - action: 'set-path /app/%[path]'
+            condition: 'if !path_starts_with_app !path_starts_with_profiler'
+
+        binds:
+        - address: 0.0.0.0
+          port: 4443
+          ssl:
+            enabled: True
+            pem_file: {{ certs_dir }}/localhost.pem
+        servers:
+        - name: reggie_backend
+          host: 127.0.0.1
+          port: 443
+          params: ssl verify none
+
+
 nginx:
   server:
     enabled: True
     bind:
       address: '0.0.0.0'
       ports:
-      - 8000
-      - 4443
+      - 80
+      - 443
     site:
       http_to_https:
         enabled: True
@@ -25,10 +68,10 @@ nginx:
         name: http_to_https
         host:
           name: localhost
-          port: 8000
+          port: 80
         redirect:
           protocol: https
-          host: localhost:4443  # Need the port to redirect correctly
+          host: localhost  #:4443 Need to include port if using non-standard https port
       https_reggie_site:
         enabled: True
         type: nginx_proxy
@@ -40,11 +83,11 @@ nginx:
         ssl:
           enabled: True
           # engine: letsencrypt
-          cert_file: /etc/ssl/certs/localhost.crt
-          key_file: /etc/ssl/certs/localhost.key
+          cert_file: {{ certs_dir }}/localhost.crt
+          key_file: {{ certs_dir }}/localhost.key
         host:
           name: localhost
-          port: 4443
+          port: 443
 
 
 postgres:

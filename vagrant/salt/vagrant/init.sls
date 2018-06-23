@@ -1,6 +1,7 @@
 # ============================================================================
 # Generate self-signed certs
 # ============================================================================
+{%- set certs_dir = salt['pillar.get']('ssl:certs_dir') %}
 
 pip install pyopenssl:
   pip.installed:
@@ -13,8 +14,14 @@ create self signed cert:
   module.run:
     - name: tls.create_self_signed_cert
     - tls_dir: '.'
-    - cacert_path: '/etc/ssl'
-    - unless: test -f /etc/ssl/certs/localhost.crt
+    - cacert_path: {{ salt['pillar.get']('ssl:dir') }}
+    - unless: test -f {{ certs_dir }}/localhost.crt
+
+bundle self signed cert:
+  cmd.run:
+    - name: cat {{ certs_dir }}/localhost.crt {{ certs_dir }}/localhost.key > {{ certs_dir }}/localhost.pem
+    - creates: {{ certs_dir }}/localhost.pem
+
 
 
 # ============================================================================
