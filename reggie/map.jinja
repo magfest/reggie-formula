@@ -12,9 +12,11 @@
 {% set reggie = salt['pillar.get']('reggie', default=defaults.reggie, merge=True) %}
 
 {% if 'data_dir' not in reggie %}
-  {% do reggie.update({
-    'data_dir': reggie.install_dir ~ '/data'
-  }) %}
+  {% do reggie.update({'data_dir': reggie.install_dir ~ '/data'}) %}
+{% endif %}
+
+{% if 'uploaded_files_dir' not in reggie %}
+  {% do reggie.update({'uploaded_files_dir': reggie.data_dir ~ '/uploaded_files'}) %}
 {% endif %}
 
 {% if 'beat_schedule_filename' not in reggie.plugins.ubersystem.config.celery %}

@@ -1,6 +1,8 @@
 base:
   'vagrant':
     - vagrant
+    - glusterfs.server
+    - glusterfs.client
     - haproxy
     - nginx
     - postgres
