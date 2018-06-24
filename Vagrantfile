@@ -7,8 +7,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "bento/ubuntu-18.04"
     config.vm.hostname = "localhost"
 
-    config.vm.network :forwarded_port, guest: 8000, host: 8000 # nginx http proxy
-    config.vm.network :forwarded_port, guest: 4443, host: 4443 # nginx https proxy
+    config.vm.network :forwarded_port, guest: 8000, host: 8000 # haproxy http proxy
+    config.vm.network :forwarded_port, guest: 4443, host: 4443 # haproxy https proxy
     config.vm.network :forwarded_port, guest: 8282, host: 8282 # cherrypy backend
 
     config.vm.synced_folder ".", "/home/vagrant/reggie-formula", create: true
@@ -49,7 +49,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     SHELL
 
     config.vm.provision :salt do |salt|
-        salt.colorize = true
         salt.masterless = true
         salt.minion_config = "vagrant/salt/vagrant/files/salt_minion.conf"
         salt.minion_id = "vagrant"

@@ -14,7 +14,6 @@ reggie db:
     - password: {{ reggie.db.password }}
     - createdb: False
     - createroles: False
-    - createuser: False
     - encrypted: True
     - login: True
     - superuser: False
