@@ -50,6 +50,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.provision :salt do |salt|
         salt.masterless = true
+        salt.install_type = "git"
+        salt.install_args = "v2018.3.2"
         salt.minion_config = "vagrant/salt/vagrant/files/salt_minion.conf"
         salt.minion_id = "vagrant"
         salt.run_highstate = true
