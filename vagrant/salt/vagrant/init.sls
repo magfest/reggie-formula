@@ -32,7 +32,6 @@ pip install pyopenssl:
 create self signed cert:
   module.run:
     - tls.create_self_signed_cert:
-      - name: self signed cert localhost.crt
       - tls_dir: '.'
       - cacert_path: {{ salt['pillar.get']('ssl:dir') }}
     - unless: test -f {{ certs_dir }}/localhost.crt
