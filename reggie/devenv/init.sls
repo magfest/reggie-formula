@@ -3,7 +3,7 @@
 # ============================================================================
 
 {% for file in ['bash_aliases', 'pythonstartup.py'] %}
-/root/.{{ file }}:
+reggie /root/.{{ file }}:
   file.managed:
     - name: /root/.{{ file }}
     - source: salt://reggie/devenv/files/{{ file }}

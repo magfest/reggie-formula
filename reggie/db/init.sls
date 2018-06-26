@@ -19,6 +19,7 @@ reggie db:
     - superuser: False
     - replication: True
     - runas: postgres
+
   postgres_database.present:
     - name: {{ reggie.db.name }}
     - owner: postgres

@@ -6,6 +6,7 @@ glusterfs-server install:
   pkgrepo.managed:
     - name: gluster/glusterfs-3.13
     - ppa: gluster/glusterfs-3.13
+
   pkg.installed:
     - name: glusterfs-server
     - refresh: True
@@ -26,7 +27,7 @@ pip install pyopenssl:
     - name: pyopenssl
     - reload_modules: True
     - require:
-      - python install
+      - reggie python install
 
 create self signed cert:
   module.run:

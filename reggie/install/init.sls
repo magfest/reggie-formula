@@ -39,12 +39,12 @@ reggie service:
         WantedBy=multi-user.target
     - template: jinja
 
-sideboard git latest:
+reggie sideboard git latest:
   git.latest:
     - name: https://github.com/magfest/sideboard.git
     - target: {{ reggie.install_dir }}
 
-chown {{ reggie.user }} {{ reggie.install_dir }}:
+reggie chown {{ reggie.user }} {{ reggie.install_dir }}:
   cmd.run:
     - name: chown -R {{ reggie.user }}:{{ reggie.group }} {{ reggie.install_dir }}
     - onlyif: >
@@ -52,7 +52,7 @@ chown {{ reggie.user }} {{ reggie.install_dir }}:
         find {{ reggie.install_dir }} -type d \! -group {{ reggie.group }} | grep -q "."
     - require:
       - reggie user
-      - sideboard git latest
+      - reggie sideboard git latest
 
 reggie virtualenv:
   virtualenv.managed:
@@ -62,9 +62,9 @@ reggie virtualenv:
     - system_site_packages: False
     - require:
       - sls: reggie.python
-      - chown {{ reggie.user }} {{ reggie.install_dir }}
+      - reggie chown {{ reggie.user }} {{ reggie.install_dir }}
 
-sideboard configuration:
+reggie sideboard configuration:
   file.managed:
     - name: {{ reggie.install_dir }}/development.ini
     - user: {{ reggie.user }}
@@ -75,46 +75,46 @@ sideboard configuration:
     - require:
       - reggie virtualenv
 
-sideboard package install:
+reggie sideboard package install:
   pip.installed:
     - editable: {{ reggie.install_dir }}
     - user: {{ reggie.user }}
     - bin_env: {{ reggie.install_dir }}/env
     - unless: test -f {{ reggie.install_dir }}/env/lib/python3.6/site-packages/sideboard.egg-link
     - require:
-      - sideboard configuration
+      - reggie sideboard configuration
 
-sideboard requirements update:
+reggie sideboard requirements update:
   pip.installed:
     - requirements: {{ reggie.install_dir }}/requirements.txt
     - user: {{ reggie.user }}
     - bin_env: {{ reggie.install_dir }}/env
     - require:
-      - sideboard package install
+      - reggie sideboard package install
 
 {%- set previous_plugin_ids = ['sideboard'] + reggie.plugins.keys() -%}
 
 {% for plugin_id, plugin in reggie.plugins.items() %}
 
-{{ plugin_id }} git latest:
+reggie {{ plugin_id }} git latest:
   git.latest:
     - name: {{ plugin.source }}
     - user: {{ reggie.user }}
     - target: {{ reggie.install_dir }}/plugins/{{ plugin.name }}
     - require:
-      - {{ previous_plugin_ids[loop.index0] }} requirements update
+      - reggie {{ previous_plugin_ids[loop.index0] }} requirements update
 
-{{ plugin_id }} package install:
+reggie {{ plugin_id }} package install:
   pip.installed:
     - editable: {{ reggie.install_dir }}/plugins/{{ plugin.name }}
     - user: {{ reggie.user }}
     - bin_env: {{ reggie.install_dir }}/env
     - unless: test -f {{ reggie.install_dir }}/env/lib/python3.6/site-packages/{{ plugin.name }}.egg-link
     - require:
-      - {{ plugin_id }} git latest
+      - reggie {{ plugin_id }} git latest
 
 {% if plugin.get('config') %}
-{{ plugin_id }} configuration:
+reggie {{ plugin_id }} configuration:
   file.managed:
     - name: {{ reggie.install_dir }}/plugins/{{ plugin.name }}/development.ini
     - user: {{ reggie.user }}
@@ -123,15 +123,15 @@ sideboard requirements update:
         {{ dump_ini(plugin.config)|indent(8) }}
     - template: jinja
     - require:
-      - {{ plugin_id }} package install
+      - reggie {{ plugin_id }} package install
 {% endif %}
 
-{{ plugin_id }} requirements update:
+reggie {{ plugin_id }} requirements update:
   pip.installed:
     - requirements: {{ reggie.install_dir }}/plugins/{{ plugin.name }}/requirements.txt
     - user: {{ reggie.user }}
     - bin_env: {{ reggie.install_dir }}/env
     - onlyif: grep -q -s '[^[:space:]]' {{ reggie.install_dir }}/plugins/{{ plugin.name }}/requirements.txt
     - require:
-      - {{ plugin_id }} package install
+      - reggie {{ plugin_id }} package install
 {% endfor %}

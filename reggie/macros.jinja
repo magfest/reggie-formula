@@ -20,7 +20,7 @@ include:
   {% endfor %}
 {% endif %}
 
-{{ slug }} rsyslog conf:
+reggie {{ slug }} rsyslog conf:
   file.managed:
     - name: /etc/rsyslog.d/{{ slug }}.conf
     - contents: |
@@ -29,7 +29,7 @@ include:
     - listen_in:
       - service: rsyslog
 
-/etc/logrotate.d/{{ slug }}:
+reggie /etc/logrotate.d/{{ slug }}:
   file.managed:
     - name: /etc/logrotate.d/{{ slug }}
     - contents: |
@@ -47,7 +47,7 @@ include:
             endscript
         }
 
-{{ slug }} service conf:
+reggie {{ slug }} service conf:
   file.managed:
     - name: /lib/systemd/system/{{ slug }}.service
     - contents: |
@@ -71,7 +71,7 @@ include:
         WantedBy={{ part_of or 'multi-user.target' }}
     - template: jinja
 
-{{ slug }} service running:
+reggie {{ slug }} service running:
   service.running:
     - name: {{ slug }}
     - enable: True

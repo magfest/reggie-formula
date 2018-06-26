@@ -6,7 +6,7 @@
 # and the Ubuntu PostgreSQL package uses the system locale to configure the
 # database defaults. We require "UTF-8" for our database, so this must be
 # run BEFORE the PostgreSQL package is installed.
-update-locale LANG="en_US.UTF-8":
+reggie update-locale LANG="en_US.UTF-8":
   cmd.run:
     - name: update-locale LANG="en_US.UTF-8"
     - unless: grep -q -E "LANG=[\"']?en_US.UTF-8[\"']?" /etc/default/locale
@@ -22,9 +22,10 @@ update-locale LANG="en_US.UTF-8":
       - sls: reggie.db
 
 # Make sure rsyslog is installed and running
-rsyslog installed and running:
+reggie rsyslog installed and running:
   pkg.installed:
     - name: rsyslog
+
   service.running:
     - name: rsyslog
     - enable: True
