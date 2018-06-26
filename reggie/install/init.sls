@@ -14,6 +14,7 @@ reggie user:
   group.present:
     - name: {{ reggie.group }}
   user.present:
+    - gid: {{ reggie.group }}
     - name: {{ reggie.user }}
 
 reggie data_dir:
