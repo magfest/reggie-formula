@@ -18,7 +18,7 @@ reggie:
       priority_plugins: ['uber']
 
       cherrypy:
-        engine.autoreload.on: False
+        engine.autoreload.on: True
         server.socket_host: '0.0.0.0'
         server.socket_port: 8282
         server.socket_timeout: 1
