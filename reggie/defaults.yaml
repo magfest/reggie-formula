@@ -29,7 +29,7 @@ reggie:
         tools.sessions.port: 6379
         tools.sessions.password: reggie
         tools.sessions.storage_type: redis
-        tools.sessions.timeout: 4320  # 3 days (in minutes)
+        tools.sessions.timeout: 60  # 1 hour (in minutes)
 
       loggers:
         cherrypy.access: DEBUG
