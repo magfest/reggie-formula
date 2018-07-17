@@ -67,15 +67,15 @@ haproxy:
 
         acl:
           header_location_exists: 'res.hdr(Location) -m found'
-          path_starts_with_app: 'path_beg -i /app'
+          path_starts_with_app: 'path_beg -i /reggie'
           path_starts_with_profiler: 'path_beg -i /profiler'
 
         http_response:
-          - action: 'replace-value Location https://([^/]*)(?:/app)?(.*) https://\1:4443\2'
+          - action: 'replace-value Location https://([^/]*)(?:/reggie)?(.*) https://\1:4443\2'
             condition: 'if header_location_exists'
 
         http_request:
-          - action: 'set-path /app/%[path]'
+          - action: 'set-path /reggie/%[path]'
             condition: 'if !path_starts_with_app !path_starts_with_profiler'
 
         binds:
