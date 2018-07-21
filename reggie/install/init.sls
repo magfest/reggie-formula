@@ -6,7 +6,6 @@
 {%- from 'reggie/macros.jinja' import dump_ini with context %}
 
 include:
-  - reggie.baseline
   - reggie.python
 
 # Create the reggie user and group

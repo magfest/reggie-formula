@@ -1,29 +1,12 @@
 # ============================================================================
-# Creates the reggie database and runs any needed database migrations.
+# Runs any needed database migrations and creates test admin if needed.
+# This state assumes the database and user already exist.
 # ============================================================================
 
 {%- from 'reggie/map.jinja' import reggie with context %}
 
 include:
   - reggie.install
-
-# Create the reggie database and user
-reggie db:
-  postgres_user.present:
-    - name: {{ reggie.db.username }}
-    - password: {{ reggie.db.password }}
-    - createdb: False
-    - createroles: False
-    - encrypted: True
-    - login: True
-    - superuser: False
-    - replication: True
-    - runas: postgres
-
-  postgres_database.present:
-    - name: {{ reggie.db.name }}
-    - owner: postgres
-    - runas: postgres
 
 # Run any schema migrations if needed
 reggie db schema migrations:
@@ -39,8 +22,4 @@ reggie db schema migrations:
 reggie db insert test admin:
   cmd.run:
     - name: {{ reggie.install_dir }}/env/bin/sep insert_admin
-    - unless: >
-        su postgres -c
-        "psql -q -t -c \"select 'yes' as has_admin from admin_account limit 1;\" {{ reggie.db.name }}"
-        2> /dev/null |
-        grep -q 'yes'
+    - unless: {{ reggie.install_dir }}/env/bin/sep has_admin

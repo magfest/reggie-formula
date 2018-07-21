@@ -1,5 +1,5 @@
 {%- set certs_dir = '/etc/ssl/certs' -%}
-{%- set ip_addr = salt['network.interface_ip']('eth0') -%}
+{%- set private_ip = salt['network.interface_ip']('eth0') -%}
 
 ssl:
   dir: /etc/ssl
@@ -24,18 +24,18 @@ glusterfs:
     enabled: True
     service: glusterd
     peers:
-      - {{ ip_addr }}
+      - {{ private_ip }}
     volumes:
       reggie_volume:
         storage: /srv/data/glusterfs/reggie_volume
         bricks:
-          - {{ ip_addr }}:/srv/data/glusterfs/reggie_volume
+          - {{ private_ip }}:/srv/data/glusterfs/reggie_volume
   client:
     enabled: True
     volumes:
       reggie_volume:
         path: /home/vagrant/reggie_data/uploaded_files
-        server: {{ ip_addr }}
+        server: {{ private_ip }}
         user: vagrant
         group: vagrant
 
@@ -131,9 +131,34 @@ nginx:
 
 postgres:
   use_upstream_repo: False
-  pkgs_extra:
-    - postgresql-contrib
+  pkgs_extra: [postgresql-contrib]
   manage_force_reload_modules: False
+  postgresconf: listen_addresses = 'localhost,{{ private_ip }}'
+
+  acls:
+    - ['local', 'all', 'all']
+    - ['host', 'all', 'all', '127.0.0.1/32', 'md5']
+    - ['hostssl', 'all', 'all', '{{ private_ip }}/24', 'md5']
+
+  users:
+    reggie:
+      ensure: present
+      password: reggie
+      createdb: False
+      createroles: False
+      encrypted: True
+      login: True
+      superuser: False
+      replication: True
+      runas: postgres
+
+  databases:
+    reggie:
+      runas: postgres
+      template: template0
+      encoding: UTF8
+      lc_ctype: en_US.UTF-8
+      lc_collate: en_US.UTF-8
 
 
 rabbitmq:
