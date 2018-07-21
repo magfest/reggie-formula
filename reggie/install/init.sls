@@ -17,13 +17,6 @@ reggie user:
     - gid: {{ reggie.group }}
     - name: {{ reggie.user }}
 
-reggie data_dir:
-  file.directory:
-    - name: {{ reggie.data_dir }}
-    - user: {{ reggie.user }}
-    - group: {{ reggie.group }}
-    - makedirs: True
-
 reggie service:
   file.managed:
     - name: /lib/systemd/system/reggie.service
@@ -45,6 +38,16 @@ reggie sideboard git latest:
     - name: https://github.com/magfest/sideboard.git
     - target: {{ reggie.install_dir }}
 
+reggie data_dir:
+  file.directory:
+    - name: {{ reggie.data_dir }}
+    - user: {{ reggie.user }}
+    - group: {{ reggie.group }}
+    - makedirs: True
+    - require:
+      - reggie user
+      - reggie sideboard git latest
+
 reggie chown {{ reggie.user }} {{ reggie.install_dir }}:
   cmd.run:
     - name: chown -R {{ reggie.user }}:{{ reggie.group }} {{ reggie.install_dir }}
@@ -52,8 +55,7 @@ reggie chown {{ reggie.user }} {{ reggie.install_dir }}:
         find {{ reggie.install_dir }} -type d \! -user {{ reggie.user }} | grep -q "." &&
         find {{ reggie.install_dir }} -type d \! -group {{ reggie.group }} | grep -q "."
     - require:
-      - reggie user
-      - reggie sideboard git latest
+      - reggie data_dir
 
 reggie virtualenv:
   virtualenv.managed:
