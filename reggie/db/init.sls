@@ -13,9 +13,9 @@ reggie db schema migrations:
   cmd.run:
     - name: {{ reggie.install_dir }}/env/bin/sep alembic upgrade heads
     - unless: >
-        diff
-        <({{ reggie.install_dir }}/env/bin/sep alembic current 2> /dev/null | awk '{print $1}' | sort)
-        <({{ reggie.install_dir }}/env/bin/sep alembic heads 2> /dev/null | awk '{print $1}' | sort)
+        $CURRENT=sep alembic current 2> /dev/null | awk '{print $1}' | sort ;
+        $HEADS=sep alembic heads 2> /dev/null | awk '{print $1}' | sort ;
+        test "$CURRENT" = "$HEADS"
 
 # Insert the Test Developer <magfest@example.com> account. This will only run
 # on new installations that don't have any admin accounts yet.
