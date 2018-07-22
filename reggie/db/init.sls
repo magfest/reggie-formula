@@ -13,8 +13,8 @@ reggie db schema migrations:
   cmd.run:
     - name: {{ reggie.install_dir }}/env/bin/sep alembic upgrade heads
     - unless: >
-        CURRENT=$(sep alembic current 2> /dev/null | awk '{print $1}' | sort) ;
-        HEADS=$(sep alembic heads 2> /dev/null | awk '{print $1}' | sort) ;
+        CURRENT=$({{ reggie.install_dir }}/env/bin/sep alembic current 2> /dev/null | awk '{print $1}' | sort) ;
+        HEADS=$({{ reggie.install_dir }}/env/bin/sep alembic heads 2> /dev/null | awk '{print $1}' | sort) ;
         test "$CURRENT" = "$HEADS"
 
 # Insert the Test Developer <magfest@example.com> account. This will only run
