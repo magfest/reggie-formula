@@ -12,6 +12,7 @@ include:
 reggie db schema migrations:
   cmd.run:
     - name: {{ reggie.install_dir }}/env/bin/sep alembic upgrade heads
+    - order: last
     - unless: >
         CURRENT=$({{ reggie.install_dir }}/env/bin/sep alembic current 2> /dev/null | awk '{print $1}' | sort) ;
         HEADS=$({{ reggie.install_dir }}/env/bin/sep alembic heads 2> /dev/null | awk '{print $1}' | sort) ;
@@ -22,4 +23,7 @@ reggie db schema migrations:
 reggie db insert test admin:
   cmd.run:
     - name: {{ reggie.install_dir }}/env/bin/sep insert_admin
+    - order: last
+    - require:
+      - cmd: reggie db schema migrations
     - unless: {{ reggie.install_dir }}/env/bin/sep has_admin
