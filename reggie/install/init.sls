@@ -74,6 +74,7 @@ reggie sideboard configuration:
     - contents: |
         {{ dump_ini(reggie.sideboard.config)|indent(8) }}
     - template: jinja
+    - show_changes: False
     - require:
       - reggie virtualenv
 
@@ -124,6 +125,7 @@ reggie {{ plugin_id }} configuration:
     - contents: |
         {{ dump_ini(plugin.config)|indent(8) }}
     - template: jinja
+    - show_changes: False
     - require:
       - reggie {{ plugin_id }} package install
 {% endif %}
