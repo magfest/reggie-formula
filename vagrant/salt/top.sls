@@ -9,8 +9,8 @@ base:
     - rabbitmq
     - redis.server
     - reggie.db
-    - reggie.tasks.scheduler
-    - reggie.tasks.worker
+    - reggie.scheduler
+    - reggie.worker
     - reggie.web
     - reggie.devenv
     - ignore_missing: True
