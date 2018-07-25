@@ -138,6 +138,9 @@ postgres:
   manage_force_reload_modules: False
   postgresconf: listen_addresses = 'localhost,{{ private_ip }}'
 
+  cluster:
+    locale: en_US.UTF-8
+
   acls:
     - ['local', 'all', 'all']
     - ['host', 'all', 'all', '127.0.0.1/32', 'md5']
