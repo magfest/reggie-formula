@@ -37,24 +37,33 @@ reggie sideboard git latest:
     - name: https://github.com/magfest/sideboard.git
     - target: {{ reggie.install_dir }}
 
-reggie data_dir:
+reggie chown {{ reggie.user }} {{ reggie.install_dir }}:
   file.directory:
-    - name: {{ reggie.plugins.ubersystem.config.data_dir }}
+    - name: {{ reggie.install_dir }}
     - user: {{ reggie.user }}
     - group: {{ reggie.group }}
     - makedirs: True
+    - recurse:
+      - user
+      - group
     - require:
       - reggie user
       - reggie sideboard git latest
 
-reggie chown {{ reggie.user }} {{ reggie.install_dir }}:
-  cmd.run:
-    - name: chown -R {{ reggie.user }}:{{ reggie.group }} {{ reggie.install_dir }}
-    - onlyif: >
-        find {{ reggie.install_dir }} -type d \! -user {{ reggie.user }} | grep -q "." &&
-        find {{ reggie.install_dir }} -type d \! -group {{ reggie.group }} | grep -q "."
+{%- for dir in ['mounted_data_dir', 'data_dir'] %}
+reggie chown {{ reggie.user }} {{ reggie.plugins.ubersystem.config[dir] }}:
+  file.directory:
+    - name: {{ reggie.plugins.ubersystem.config[dir] }}
+    - user: {{ reggie.user }}
+    - group: {{ reggie.group }}
+    - makedirs: True
+    - recurse:
+      - user
+      - group
     - require:
-      - reggie data_dir
+      - reggie user
+      - reggie sideboard git latest
+{%- endfor %}
 
 reggie virtualenv:
   virtualenv.managed:
