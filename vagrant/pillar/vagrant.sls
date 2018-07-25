@@ -10,13 +10,16 @@ reggie:
   user: vagrant
   group: vagrant
   install_dir: /home/vagrant/reggie-formula/reggie-deploy
-  data_dir: /home/vagrant/reggie_data
-  uploaded_files_dir: /home/vagrant/reggie_data/uploaded_files
 
   plugins:
     magprime:
       name: magprime
       source: https://github.com/magfest/magprime.git
+
+    ubersystem:
+      config:
+        data_dir: /home/vagrant/reggie_data
+        mounted_data_dir: /home/vagrant/reggie_data/mnt
 
 
 glusterfs:
@@ -34,7 +37,7 @@ glusterfs:
     enabled: True
     volumes:
       reggie_volume:
-        path: /home/vagrant/reggie_data/uploaded_files
+        path: /home/vagrant/reggie_data/mnt
         server: {{ private_ip }}
         user: vagrant
         group: vagrant

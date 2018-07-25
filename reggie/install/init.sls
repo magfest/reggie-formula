@@ -39,7 +39,7 @@ reggie sideboard git latest:
 
 reggie data_dir:
   file.directory:
-    - name: {{ reggie.data_dir }}
+    - name: {{ reggie.plugins.ubersystem.config.data_dir }}
     - user: {{ reggie.user }}
     - group: {{ reggie.group }}
     - makedirs: True
