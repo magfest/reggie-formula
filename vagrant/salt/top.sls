@@ -4,7 +4,7 @@ base:
     - glusterfs.server
     - glusterfs.client
     - haproxy
-    - nginx
+    - nginx.ng
     - postgres
     - rabbitmq
     - redis.server
