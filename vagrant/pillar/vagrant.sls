@@ -130,13 +130,7 @@ nginx:
 
         http:
           server_tokens: 'off'
-
           gzip: 'on'
-          gzip_disable: '"msie6"'
-          include:
-            - /etc/nginx/mime.types
-            - /etc/nginx/conf.d/*.conf
-            - /etc/nginx/sites-enabled/*
 
     servers:
       managed:
