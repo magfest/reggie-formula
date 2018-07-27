@@ -4,7 +4,6 @@ base:
     - reggie.devenv
     - reggie_deploy.ssl
     - reggie_deploy.glusterfs
-    - reggie_deploy.web
     - glusterfs.server
     - glusterfs.client
     - haproxy
@@ -16,4 +15,5 @@ base:
     - reggie.scheduler
     - reggie.worker
     - reggie.web
+    - reggie_deploy.web
     - ignore_missing: True
