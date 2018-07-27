@@ -47,66 +47,65 @@ glusterfs:
 
 
 haproxy:
-  proxy:
-    enabled: True
-    mode: http
-    logging: syslog
-    maxconn: 1024
-    timeout:
-      connect: 5000
-      client: 50000
-      server: 50000
-    listen:
-      reggie_http_to_https_redirect:
-        mode: http
+  enabled: True
+  overwrite: True
 
-        http_request:
-          - action: 'redirect location https://%H:4443%HU code 301'
+  global:
+    tune.ssl.default-dh-param: 2048
 
-        binds:
-        - address: 0.0.0.0
-          port: 8000
+  listens:
+    reggie_http_to_https_redirect:
+      mode: http
+      bind: '0.0.0.0:8000'
+      redirects: 'location https://%H:4443%HU code 301'
 
-      reggie_load_balancer:
-        mode: http
-        force_ssl: True
+  frontends:
+    reggie_load_balancer:
+      mode: http
+      bind: '0.0.0.0:4443 ssl crt {{ certs_dir }}/{{ minion_id }}.pem'
+      redirects: 'scheme https code 301 if !{ ssl_fc }'
 
-        acl:
-          {%- for header in ['Location', 'Refresh'] %}
-          header_{{ header|lower }}_exists: 'res.hdr({{ header }}) -m found'
-          {%- endfor %}
+      acls:
+        {%- for header in ['Location', 'Refresh'] %}
+        - 'header_{{ header|lower }}_exists res.hdr({{ header }}) -m found'
+        {%- endfor %}
 
-          {%- for path in ['reggie', 'uber', 'profiler', 'stats'] %}
-          path_is_{{ path }}: 'path -i /{{ path }}'
-          path_starts_with_{{ path }}: 'path_beg -i /{{ path }}/'
-          {%- endfor %}
+        {%- for path in ['reggie', 'uber', 'profiler', 'stats'] %}
+        - 'path_is_{{ path }} path -i /{{ path }}'
+        - 'path_starts_with_{{ path }} path_beg -i /{{ path }}/'
+        {%- endfor %}
 
-        http_response:
-          {%- for header in ['Location', 'Refresh'] %}
-          - action: 'replace-value {{ header }} https://([^/]*)(?:/reggie)?(.*) https://\1:4443\2'
-            condition: 'if header_{{ header|lower }}_exists'
-          {%- endfor %}
+        - 'path_starts_with_static path_beg -i /reggie/static/ /reggie/static_views/ /static/ /static_views/'
 
-        http_request:
-          {%- for path in ['reggie', 'uber'] %}
-          - action: 'redirect location https://%[hdr(host)]%[url,regsub(^/{{ path }}/?,/,i)] code 302'
-            condition: 'if path_is_{{ path }} path_starts_with_{{ path }}'
-          {%- endfor %}
-          - action: 'set-path /reggie%[path]'
-            condition: 'if !path_is_profiler !path_starts_with_profiler !path_is_stats !path_starts_with_stats'
+      httpresponses:
+        {%- for header in ['Location', 'Refresh'] %}
+        - 'replace-value {{ header }} https://([^/]*)(?:/reggie)?(.*) https://\1:4443\2 if header_{{ header|lower }}_exists'
+        {%- endfor %}
 
-        binds:
-        - address: 0.0.0.0
-          port: 4443
-          ssl:
-            enabled: True
-            pem_file: {{ certs_dir }}/{{ minion_id }}.pem
+      httprequests:
+        {%- for path in ['reggie', 'uber'] %}
+        - 'redirect location https://%[hdr(host)]%[url,regsub(^/{{ path }}/?,/,i)] code 302 if path_is_{{ path }} OR path_starts_with_{{ path }}'
+        {%- endfor %}
+        - 'set-path /reggie%[path] if !path_is_profiler !path_starts_with_profiler !path_is_stats !path_starts_with_stats'
 
-        servers:
-        - name: reggie_backend
-          host: 127.0.0.1
+      use_backends: 'reggie_http_backend if path_starts_with_static'
+      default_backend: 'reggie_https_backend'
+
+  backends:
+    reggie_https_backend:
+      mode: http
+      servers:
+        reggie_https_server:
+          host: {{ private_ip }}
           port: 443
-          params: ssl verify none
+          extra: 'ssl verify none'
+
+    reggie_http_backend:
+      mode: http
+      servers:
+        reggie_http_server:
+          host: {{ private_ip }}
+          port: 80
 
 
 nginx:
@@ -152,25 +151,42 @@ nginx:
           config:
             - server:
               - server_name: localhost
-              - listen: 443
+              - listen: '127.0.0.1:443 ssl'
+              - listen: '{{ private_ip }}:443 ssl'
               {{ nginx_ssl_config(
-                  certs_dir ~ '/localhost.key',
-                  certs_dir ~ '/localhost.crt',
+                  certs_dir ~ '/' ~ minion_id ~ '.key',
+                  certs_dir ~ '/' ~ minion_id ~ '.crt',
                   certs_dir ~ '/dhparams.pem')|indent(14) }}
 
               {%- for location in ['/preregistration/form'] %}
               - 'location = /reggie{{ location }}':
                 - proxy_hide_header: Cache-Control
-                {{ nginx_proxy_config(443, cache='/etc/nginx/reggie_short_term_cache.conf')|indent(16) }}
+                {{ nginx_proxy_config(cache='/etc/nginx/reggie_short_term_cache.conf')|indent(16) }}
               {%- endfor %}
 
               {%- for location in ['/static/', '/static_views/'] %}
               - 'location /reggie{{ location }}':
-                {{ nginx_proxy_config(443, cache='/etc/nginx/reggie_long_term_cache.conf')|indent(16) }}
+                {{ nginx_proxy_config(cache='/etc/nginx/reggie_long_term_cache.conf')|indent(16) }}
               {%- endfor %}
 
               - 'location /':
-                {{ nginx_proxy_config(443)|indent(16) }}
+                {{ nginx_proxy_config()|indent(16) }}
+
+            - server:
+              - server_name: localhost
+              - listen: '127.0.0.1:80'
+              - listen: '{{ private_ip }}:80'
+
+              - access_log: /var/log/nginx/access_static.log
+              - error_log: /var/log/nginx/error_static.log
+
+              {%- for location in ['/static/', '/static_views/'] %}
+              - 'location /reggie{{ location }}':
+                {{ nginx_proxy_config(cache='/etc/nginx/reggie_long_term_cache.conf')|indent(16) }}
+              {%- endfor %}
+
+              - 'location /':
+                - return: '301 https://$host:443$request_uri'
 
         reggie_long_term_cache.conf:
           enabled: True
