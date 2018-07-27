@@ -57,7 +57,7 @@ haproxy:
     reggie_http_to_https_redirect:
       mode: http
       bind: '0.0.0.0:8000'
-      redirects: 'location https://%H:4443%HU code 301'
+      httprequests: 'redirect location https://%[hdr(host),regsub(:8000,:4443,i)]%[capture.req.uri] code 301'
 
   frontends:
     reggie_load_balancer:
