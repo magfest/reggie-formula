@@ -99,6 +99,7 @@ haproxy:
           host: {{ private_ip }}
           port: 443
           extra: 'ssl verify none'
+          check: check
 
     reggie_http_backend:
       mode: http
@@ -106,6 +107,7 @@ haproxy:
         reggie_http_server:
           host: {{ private_ip }}
           port: 80
+          check: check
 
 
 nginx:
