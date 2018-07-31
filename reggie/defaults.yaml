@@ -19,7 +19,14 @@ reggie:
     password: reggie
     host: '127.0.0.1'
     port: 5672
-    name: reggie
+    vhost: reggie
+
+  sessions:
+    host: '127.0.0.1'
+    port: 6379
+    password: reggie
+    storage_type: redis
+    timeout: 60  # 1 hour (in minutes)
 
   sideboard:
     config:
@@ -34,11 +41,6 @@ reggie:
         server.thread_pool: 100
         tools.proxy.debug: False
         tools.proxy.on: True
-        tools.sessions.host: '127.0.0.1'
-        tools.sessions.port: 6379
-        tools.sessions.password: reggie
-        tools.sessions.storage_type: redis
-        tools.sessions.timeout: 60  # 1 hour (in minutes)
 
       loggers:
         cherrypy.access: DEBUG

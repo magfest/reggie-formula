@@ -55,6 +55,13 @@
       reggie.queue.password ~ '@' ~
       reggie.queue.host ~ ':' ~
       reggie.queue.port ~ '/' ~
-      reggie.queue.name
+      reggie.queue.vhost
   }) %}
 {% endif %}
+
+{% for key, value in reggie.sessions.items() %}
+  {% set config_key = 'tools.sessions.' ~ key %}
+  {% if config_key not in reggie.sideboard.config.cherrypy %}
+    {% do reggie.sideboard.config.cherrypy.update({ config_key: value }) %}
+  {% endif %}
+{% endfor %}
