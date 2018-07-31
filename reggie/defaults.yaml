@@ -34,7 +34,7 @@ reggie:
         server.thread_pool: 100
         tools.proxy.debug: False
         tools.proxy.on: True
-        tools.sessions.host: localhost
+        tools.sessions.host: '127.0.0.1'
         tools.sessions.port: 6379
         tools.sessions.password: reggie
         tools.sessions.storage_type: redis
