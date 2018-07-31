@@ -12,6 +12,15 @@ reggie:
     port: 5432
     name: reggie
 
+  queue:
+    dialect: amqp
+    driver: ''
+    username: reggie
+    password: reggie
+    host: '127.0.0.1'
+    port: 5672
+    name: reggie
+
   sideboard:
     config:
       debug: False
@@ -59,7 +68,7 @@ reggie:
         url_base: '%(url_root)s%(path)s'
 
         organization_name: MAGFest INC
-        year: 2019
+        event_year: 2019
         event_name: MAGFest
         event_timezone: US/Eastern
         event_venue: The Gaylord National Hotel and Convention Center
@@ -169,7 +178,8 @@ reggie:
         mivs_submission_grace_period: 10
         mivs_start_year: 2013
 
-        treasury_dept_checklist_form_url: https://docs.google.com/spreadsheets/d/1v-jZ7NPIgpR0-wsfZFOTKJJbKDUrd-xVIgf0mTTbjtM/edit#gid=799868163
+        treasury_dept_checklist_form_url: >
+          https://docs.google.com/spreadsheets/d/1v-jZ7NPIgpR0-wsfZFOTKJJbKDUrd-xVIgf0mTTbjtM/edit#gid=799868163
         techops_dept_checklist_form_url: https://goo.gl/forms/HRZrccSq9PFYnUVc2
 
         expected_response: December 2018
@@ -188,8 +198,7 @@ reggie:
 
         celery: {}
 
-        secret:
-          broker_url: amqp://reggie:reggie@localhost:5672/reggie
+        secret: {}
 
         dates:
           prereg_open: 2018-05-01
@@ -243,42 +252,42 @@ reggie:
           guest_travel_plans_deadline: 2018-10-21
 
         badge_ranges:
-          staff_badge: [25, 2999]
-          guest_badge: [3000, 3600]
-          attendee_badge: [3601, 39999]
-          one_day_badge: [40000, 49999]
-          child_badge: [50000, 59999]
+          - staff_badge: [25, 2999]
+          - guest_badge: [3000, 3600]
+          - attendee_badge: [3601, 39999]
+          - one_day_badge: [40000, 49999]
+          - child_badge: [50000, 59999]
 
         badge_prices:
-          one_days_enabled: False
-          initial_attendee: 59
-          dealer_badge_price: 45
-          group_discount: 10
-          presell_one_days: False
+          - one_days_enabled: False
+          - initial_attendee: 59
+          - dealer_badge_price: 45
+          - group_discount: 10
+          - presell_one_days: False
 
-          attendee:
-            2018-08-31: 69
-            2018-09-30: 79
-            2018-10-31: 85
-            2019-01-04: 85
-            2019-01-05: 70
-            2019-01-06: 55
-            2019-01-07: 20
-            3000: 69
-            6000: 79
-            10500: 85
+          - attendee:
+            - 2018-08-31: 69
+            - 2018-09-30: 79
+            - 2018-10-31: 85
+            - 2019-01-04: 85
+            - 2019-01-05: 70
+            - 2019-01-06: 55
+            - 2019-01-07: 20
+            - 3000: 69
+            - 6000: 79
+            - 10500: 85
 
-          stocks:
-            friday: 1300
-            saturday: 1500
-            sunday: 700
+          - stocks:
+            - friday: 1300
+            - saturday: 1500
+            - sunday: 700
 
         table_prices:
-          default_price: 350
-          1: 150
-          2: 250
-          3: 400
-          4: 550
+          - default_price: 350
+          - 1: 150
+          - 2: 250
+          - 3: 400
+          - 4: 550
 
         integer_enums:
           shirt_level: 25
@@ -286,341 +295,341 @@ reggie:
           season_level: 200
 
           shirt:
-            no shirt: 0
-            S Unisex: 1
-            M Unisex: 2
-            L Unisex: 3
-            XL Unisex: 4
-            2XL Unisex: 5
-            3XL Unisex: 6
-            4XL Unisex: 11
-            5XL Unisex: 12
-            S Unisex slim fit: 14
-            M Unisex slim fit: 15
-            L Unisex slim fit: 16
-            XL Unisex slim fit: 17
-            2XL Unisex slim fit: 18
-            S Women's: 7
-            M Women's: 8
-            L Women's: 9
-            XL Women's: 10
-            2XL Women's: 13
-            S Women's slim fit: 19
-            M Women's slim fit: 20
-            L Women's slim fit: 21
-            XL Women's slim fit: 22
-            2XL Women's slim fit: 23
+            - no shirt: 0
+            - S Unisex: 1
+            - M Unisex: 2
+            - L Unisex: 3
+            - XL Unisex: 4
+            - 2XL Unisex: 5
+            - 3XL Unisex: 6
+            - 4XL Unisex: 11
+            - 5XL Unisex: 12
+            - S Unisex slim fit: 14
+            - M Unisex slim fit: 15
+            - L Unisex slim fit: 16
+            - XL Unisex slim fit: 17
+            - 2XL Unisex slim fit: 18
+            - S Women's: 7
+            - M Women's: 8
+            - L Women's: 9
+            - XL Women's: 10
+            - 2XL Women's: 13
+            - S Women's slim fit: 19
+            - M Women's slim fit: 20
+            - L Women's slim fit: 21
+            - XL Women's slim fit: 22
+            - 2XL Women's slim fit: 23
 
           donation_tier:
-            No thanks: 0
-            T-Shirt Bundle: SHIRT_LEVEL
-            Supporter: SUPPORTER_LEVEL
-            Super Star: 200
+            - No thanks: 0
+            - T-Shirt Bundle: SHIRT_LEVEL
+            - Supporter: SUPPORTER_LEVEL
+            - Super Star: 200
 
         enums:
           badge:
-            attendee_badge: Attendee
-            child_badge: Minor
-            staff_badge: Staff
-            guest_badge: Guest
-            one_day_badge: One Day
+            - attendee_badge: Attendee
+            - child_badge: Minor
+            - staff_badge: Staff
+            - guest_badge: Guest
+            - one_day_badge: One Day
 
           ribbon:
-            band: RockStar
-            under_13: 12 & Under
-            mivs: Indie Dev
+            - band: RockStar
+            - under_13: 12 & Under
+            - mivs: Indie Dev
 
           job_location:
-            console: Consoles
-            arcade: Arcade
-            arcade_crew: Arcade_Crew
-            attendee_service: Attendee Services
-            autographs: Autographs
-            challenges: Challenges
-            charity: Charity
-            chipspace: Chipspace
-            concert_ops: Main Theater Operations
-            concert_tech: Main Theater Tech
-            con_ops: Fest Ops
-            dispatch: Dispatch
-            dorsai: Dorsai
-            escape_room: Escape Room
-            events: Events
-            hotel: Hotel
-            panels: Panels
-            food_prep: Staff Suite
-            film_fest: Games on Film
-            indie_arcade: Indie Arcade
-            indie_games: Indie Games
-            indie_tabletop: Indie Tabletop
-            jamspace: Jam Space
-            lan: LAN
-            larp: LARP
-            loadin: Logistics
-            loudr: Rock Island
-            mages: MAGES
-            marketplace: Marketplace
-            merch: Merchandise
-            merch_contractor: Yetee Staff
-            mops: MEDIATRON!
-            museum: Museum
-            music: Music
-            public_safety: Public Safety
-            regdesk: Registration
-            reg_managers: Reg Managers
-            rescuers: Rescuers
-            security: Security
-            shedspace: Jam Clinic
-            simulations: Simulations
-            staff_support: Staff Support
-            tea_room: Staff Tea Room
-            stops: Staffing Ops
-            tabletop: Tabletop
-            tabletop_rpg: Tabletop (Pathfinder)
-            tabletop_ddal: Tabletop (DDAL)
-            tabletop_ccg: Tabletop (CCG)
-            treasury: Treasury
-            tech_ops: Tech Ops
-            vrzone: VRZone
-            zombie_tag: Zombie Tag
+            - console: Consoles
+            - arcade: Arcade
+            - arcade_crew: Arcade_Crew
+            - attendee_service: Attendee Services
+            - autographs: Autographs
+            - challenges: Challenges
+            - charity: Charity
+            - chipspace: Chipspace
+            - concert_ops: Main Theater Operations
+            - concert_tech: Main Theater Tech
+            - con_ops: Fest Ops
+            - dispatch: Dispatch
+            - dorsai: Dorsai
+            - escape_room: Escape Room
+            - events: Events
+            - hotel: Hotel
+            - panels: Panels
+            - food_prep: Staff Suite
+            - film_fest: Games on Film
+            - indie_arcade: Indie Arcade
+            - indie_games: Indie Games
+            - indie_tabletop: Indie Tabletop
+            - jamspace: Jam Space
+            - lan: LAN
+            - larp: LARP
+            - loadin: Logistics
+            - loudr: Rock Island
+            - mages: MAGES
+            - marketplace: Marketplace
+            - merch: Merchandise
+            - merch_contractor: Yetee Staff
+            - mops: MEDIATRON!
+            - museum: Museum
+            - music: Music
+            - public_safety: Public Safety
+            - regdesk: Registration
+            - reg_managers: Reg Managers
+            - rescuers: Rescuers
+            - security: Security
+            - shedspace: Jam Clinic
+            - simulations: Simulations
+            - staff_support: Staff Support
+            - tea_room: Staff Tea Room
+            - stops: Staffing Ops
+            - tabletop: Tabletop
+            - tabletop_rpg: Tabletop (Pathfinder)
+            - tabletop_ddal: Tabletop (DDAL)
+            - tabletop_ccg: Tabletop (CCG)
+            - treasury: Treasury
+            - tech_ops: Tech Ops
+            - vrzone: VRZone
+            - zombie_tag: Zombie Tag
 
           job_interest:
-            anything: Anything
-            arcade: Arcade
-            challenges: Challenges Booth
-            charity: Charity
-            chipspace: Chipspace
-            console: Consoles
-            film_fest: Film Festival
-            indie_games: Indie Showcase
-            jamspace: Jam Space
-            lan: LAN
-            museum: Museum
-            panels: Panels
-            regdesk: Registration
-            loudr: Rock Island (Merch)
-            security: Security
-            food_prep: Staff Suite
-            staff_support: Staff Support
-            tea_room: Staff Tea Room
-            tabletop: Tabletop
-            tech_ops: Tech Ops
-            other: Other
+            - anything: Anything
+            - arcade: Arcade
+            - challenges: Challenges Booth
+            - charity: Charity
+            - chipspace: Chipspace
+            - console: Consoles
+            - film_fest: Film Festival
+            - indie_games: Indie Showcase
+            - jamspace: Jam Space
+            - lan: LAN
+            - museum: Museum
+            - panels: Panels
+            - regdesk: Registration
+            - loudr: Rock Island (Merch)
+            - security: Security
+            - food_prep: Staff Suite
+            - staff_support: Staff Support
+            - tea_room: Staff Tea Room
+            - tabletop: Tabletop
+            - tech_ops: Tech Ops
+            - other: Other
 
           interest:
-            console: Consoles
-            arcade: Arcade
-            lan: LAN
-            music: Concerts
-            Jams: Jam Space
-            panels: Guests/Panels
-            tabletop: Tabletop games
-            dealers: Dealers
-            tournaments: Tournaments
+            - console: Consoles
+            - arcade: Arcade
+            - lan: LAN
+            - music: Concerts
+            - Jams: Jam Space
+            - panels: Guests/Panels
+            - tabletop: Tabletop games
+            - dealers: Dealers
+            - tournaments: Tournaments
 
           dealer_wares:
-            vgames: Video Games
-            tshirts: T-shirts
-            figures: Figures
-            general: General Merchandise
-            prints: Prints
-            plushes: Plushes
-            lanyards: Lanyards/Keychains
-            perler: Perler Beads
-            jewelry: Jewelry
-            bath: Bath Products
-            handmade: General Handmade
+            - vgames: Video Games
+            - tshirts: T-shirts
+            - figures: Figures
+            - general: General Merchandise
+            - prints: Prints
+            - plushes: Plushes
+            - lanyards: Lanyards/Keychains
+            - perler: Perler Beads
+            - jewelry: Jewelry
+            - bath: Bath Products
+            - handmade: General Handmade
 
           event_location:
-            panels_1: Panels 1 (Cherry Blossom Ballroom)
-            panels_2: Panels 2 (Woodrow Wilson Ballroom)
-            panels_3: Panels 3 (Woodrow Wilson Ballroom)
-            panels_4: Panels 4 (Annapolis 1-4)
-            mages_1: MAGES 1 (Chesapeake G,H,I)
-            mages_2: MAGES 2 (Chesapeake 7,8,9)
-            forum: Forum (Chesapeake 10,11,12)
-            the_forge: Forge (Baltimore 3,4)
-            soapbox: The Soapbox (Camellia 3,4)
-            autographs: Autographs Red (Expo Hall E)
-            autographs_1: Autographs Blue (Expo Hall E)
-            film_fest: Games on Film (Chesapeake J,K,L)
-            console_stage: Arena (Maryland D)
-            starship_horizons: Starship Horizons (Maryland C)
-            simulations: Artemis (Maryland C)
-            console_tournament: Console (Gameroom Tournaments)
-            console_tournament_2: Console (Attendee-Run Tournaments 2)
-            console_attendee: Console (Attendee-Run Tournaments)
-            arcade_tournaments_1: Arcade (Tournaments 1)
-            arcade_tournaments_2: Arcade (Tournaments 2)
-            arcade_tournaments_3: Arcade (Tournaments 3)
-            arcade_tournaments_5: Arcade (Tournaments 4)
-            arcade_tournaments_4: Arcade (Pinball)
-            lan_1: LAN 1
-            lan_2: LAN 2
-            lan_theater: LAN Theater
-            larp: LARP (Expo Hall E)
-            tabletop_indie: Tabletop Indie Showcase (National Harbor 10,11)
-            tabletop_tournaments: Tabletop (Tournaments 1)
-            tabletop_tournaments_2: Tabletop (Tournaments 2)
-            tabletop_panels: Tabletop Discussions (National Harbor 8)
-            tabletop_ccg: Tabletop CCG (National Harbor 4,5,6,7)
-            pathfinder: Pathfinder (National Harbor 12,13)
-            ddal: D&D Adventurers League, 5th edition (National Harbor 12,13)
-            concerts: Concerts (Potomac Ballrooms)
-            chiptunes: Chipspace (Potomac Hallway)
-            zombie_tag: Zombie Tag (Magnolia 1)
-            escape_room: Escape Room (Baltimore 1,2)
-            MegaManathon: Mega Man-athon 6 (Maryland Hallway)
-            pose_lounge: POSE Lounge
-            lobby_bar: Belvedere Lobby Bar
-            jamspace: Jamspace + Community Curated Stage (Eastern Shore 1,2,3)
-            jam_clinic: Jam Clinic (Chesapeake A,B,C)
-            vrzone: VRZone (Magnolia 2,3)
+            - panels_1: Panels 1 (Cherry Blossom Ballroom)
+            - panels_2: Panels 2 (Woodrow Wilson Ballroom)
+            - panels_3: Panels 3 (Woodrow Wilson Ballroom)
+            - panels_4: Panels 4 (Annapolis 1-4)
+            - mages_1: MAGES 1 (Chesapeake G,H,I)
+            - mages_2: MAGES 2 (Chesapeake 7,8,9)
+            - forum: Forum (Chesapeake 10,11,12)
+            - the_forge: Forge (Baltimore 3,4)
+            - soapbox: The Soapbox (Camellia 3,4)
+            - autographs: Autographs Red (Expo Hall E)
+            - autographs_1: Autographs Blue (Expo Hall E)
+            - film_fest: Games on Film (Chesapeake J,K,L)
+            - console_stage: Arena (Maryland D)
+            - starship_horizons: Starship Horizons (Maryland C)
+            - simulations: Artemis (Maryland C)
+            - console_tournament: Console (Gameroom Tournaments)
+            - console_tournament_2: Console (Attendee-Run Tournaments 2)
+            - console_attendee: Console (Attendee-Run Tournaments)
+            - arcade_tournaments_1: Arcade (Tournaments 1)
+            - arcade_tournaments_2: Arcade (Tournaments 2)
+            - arcade_tournaments_3: Arcade (Tournaments 3)
+            - arcade_tournaments_5: Arcade (Tournaments 4)
+            - arcade_tournaments_4: Arcade (Pinball)
+            - lan_1: LAN 1
+            - lan_2: LAN 2
+            - lan_theater: LAN Theater
+            - larp: LARP (Expo Hall E)
+            - tabletop_indie: Tabletop Indie Showcase (National Harbor 10,11)
+            - tabletop_tournaments: Tabletop (Tournaments 1)
+            - tabletop_tournaments_2: Tabletop (Tournaments 2)
+            - tabletop_panels: Tabletop Discussions (National Harbor 8)
+            - tabletop_ccg: Tabletop CCG (National Harbor 4,5,6,7)
+            - pathfinder: Pathfinder (National Harbor 12,13)
+            - ddal: D&D Adventurers League, 5th edition (National Harbor 12,13)
+            - concerts: Concerts (Potomac Ballrooms)
+            - chiptunes: Chipspace (Potomac Hallway)
+            - zombie_tag: Zombie Tag (Magnolia 1)
+            - escape_room: Escape Room (Baltimore 1,2)
+            - MegaManathon: Mega Man-athon 6 (Maryland Hallway)
+            - pose_lounge: POSE Lounge
+            - lobby_bar: Belvedere Lobby Bar
+            - jamspace: Jamspace + Community Curated Stage (Eastern Shore 1,2,3)
+            - jam_clinic: Jam Clinic (Chesapeake A,B,C)
+            - vrzone: VRZone (Magnolia 2,3)
 
           sandwich:
-            turkey: Turkey
-            ham: Ham
-            cheese: Cheese
-            peanut_butter: Peanut Butter
-            jelly: Jelly
-            salad: Prefer salad instead of sandwich
+            - turkey: Turkey
+            - ham: Ham
+            - cheese: Cheese
+            - peanut_butter: Peanut Butter
+            - jelly: Jelly
+            - salad: Prefer salad instead of sandwich
 
           food_restriction:
-            gluten: No gluten
-            pork: No pork
-            nuts: No nuts
-            vegan: Vegetarian/Vegan
+            - gluten: No gluten
+            - pork: No pork
+            - nuts: No nuts
+            - vegan: Vegetarian/Vegan
 
           presentation:
-            basic: Lecture
-            group_discussion: Group Discussion with Moderator
-            qa: Question & Answer
-            gameshow: Gameshow
-            workshop: Workshop
-            learn_to_play: Learn to Play
-            participation: Audience Participation
-            physical_activity: Physical Activity (either group participation or performance)
-            performance: Comedy Performance
-            music: Music Performance
-            advanced_av: Podcast/Vodcast Recording
-            karaoke: Karaoke/Sing a Long
-            movie: Movie Screening
-            other: Other
+            - basic: Lecture
+            - group_discussion: Group Discussion with Moderator
+            - qa: Question & Answer
+            - gameshow: Gameshow
+            - workshop: Workshop
+            - learn_to_play: Learn to Play
+            - participation: Audience Participation
+            - physical_activity: Physical Activity (either group participation or performance)
+            - performance: Comedy Performance
+            - music: Music Performance
+            - advanced_av: Podcast/Vodcast Recording
+            - karaoke: Karaoke/Sing a Long
+            - movie: Movie Screening
+            - other: Other
 
           guest_merch:
-            no_merch: Not selling merch
-            own_table: Dedicated table
-            rock_island: Rock Island
+            - no_merch: Not selling merch
+            - own_table: Dedicated table
+            - rock_island: Rock Island
 
         donation_tier_descriptions:
-          no_thanks:
-            name: No thanks
-            icon: ''
-            description: No thanks
-            link: ''
+          - no_thanks:
+            - name: No thanks
+            - icon: ''
+            - description: No thanks
+            - link: ''
 
-          shirt:
-            name: T-Shirt Bundle
-            icon: ../static/icons/iconshirt.png
-            description: Ribbon|T-Shirt|Event Pin
-            link: ../static_views/ribbon.html|../static_views/tshirt.html|../static_views/event_pin.html
+          - shirt:
+            - name: T-Shirt Bundle
+            - icon: ../static/icons/iconshirt.png
+            - description: Ribbon|T-Shirt|Event Pin
+            - link: ../static_views/ribbon.html|../static_views/tshirt.html|../static_views/event_pin.html
 
-          supporter:
-            name: Supporter
-            icon: ../static/icons/supporter.png
-            description: Super Swag Bag|Swadge
-            link: ../static_views/super_swag_bag.html|../static_views/swadge.html
+          - supporter:
+            - name: Supporter
+            - icon: ../static/icons/supporter.png
+            - description: Super Swag Bag|Swadge
+            - link: ../static_views/super_swag_bag.html|../static_views/swadge.html
 
-          super_star:
-            name: Super Star
-            icon: ../static/icons/super_star.png
-            description: Star Rod Wand|Star Umbrella|Invitation
-            link: ../static_views/star_rod_wand.html|../static_views/star_umbrella.html|../static_views/invitation.html
-            merch_items: Star Wand","Star Umbrella
+          - super_star:
+            - name: Super Star
+            - icon: ../static/icons/super_star.png
+            - description: Star Rod Wand|Star Umbrella|Invitation
+            - link: ../static_views/star_rod_wand.html|../static_views/star_umbrella.html|../static_views/invitation.html
+            - merch_items: ['Star Wand', 'Star Umbrella']
 
         dept_head_checklist:
-          creating_shifts:
-            deadline: 2018-11-06
-            description: >
+          - creating_shifts:
+            - deadline: 2018-11-06
+            - description: >
                 We have the ability to import shifts from MAGFest 2018 to MAGFest 2019, if you are only
                 making minor changes and want assistance with this step, please let us know.
-            path: /jobs/index?department_id={department_id}
+            - path: /jobs/index?department_id={department_id}
 
-          assigned_volunteers:
-            name: Volunteers Assigned to Your Department
-            deadline: 2018-11-07
-            description: >
+          - assigned_volunteers:
+            - name: Volunteers Assigned to Your Department
+            - deadline: 2018-11-07
+            - description: >
                 Check all of the volunteers currently assigned to your department to make sure no one is
                 missing AND that no one is there who shouldn't be.
-            path: /jobs/staffers?department_id={department_id}
+            - path: /jobs/staffers?department_id={department_id}
 
-          treasury:
-            name: MPoint Needs
-            deadline: 2018-11-08
-            description: Tell us whether you need any mpoints for your department.
-            path: /dept_checklist/treasury?department_id={department_id}
+          - treasury:
+            - name: MPoint Needs
+            - deadline: 2018-11-08
+            - description: Tell us whether you need any mpoints for your department.
+            - path: /dept_checklist/treasury?department_id={department_id}
 
-          allotments:
-            name: Treasury Information
-            deadline: 2018-11-08
-            description: If you need cash and/or mpoints, tell us your department schedule and your specific cash needs.
-            path: /dept_checklist/allotments?department_id={department_id}
+          - allotments:
+            - name: Treasury Information
+            - deadline: 2018-11-08
+            - description: If you need cash and/or mpoints, tell us your department schedule and your specific cash needs.
+            - path: /dept_checklist/allotments?department_id={department_id}
 
-          hotel_setup:
-            name: Hotel Setup Information
-            deadline: 2018-11-15
-            description: Do you need tables, chairs, trash cans, water dispensers, etc?
-            path: /dept_checklist/hotel_setup?department_id={department_id}
+          - hotel_setup:
+            - name: Hotel Setup Information
+            - deadline: 2018-11-15
+            - description: Do you need tables, chairs, trash cans, water dispensers, etc?
+            - path: /dept_checklist/hotel_setup?department_id={department_id}
 
-          approve_setup_teardown:
-            name: Approve/Decline Additional Hotel Nights to Help With Setup/Teardown
-            deadline: 2018-11-22
-            description: >
+          - approve_setup_teardown:
+            - name: Approve/Decline Additional Hotel Nights to Help With Setup/Teardown
+            - deadline: 2018-11-22
+            - description: >
                 An overwhelming majority of staffers want to work setup and teardown shifts rather than
                 work during the event itself, so we have far more offers than we have need for. Since this
                 affects what hotel nights staffers get, please approve and decline requests for this for
                 people in your department.
-            path: /hotel/requests?department_id={department_id}
+            - path: /hotel/requests?department_id={department_id}
 
-          placeholders:
-            name: Checking Placeholder Registrations
-            deadline: 2018-11-22
-            description: >
+          - placeholders:
+            - name: Checking Placeholder Registrations
+            - deadline: 2018-11-22
+            - description: >
                 We create placeholder registrations for volunteers and ask them to fill out the rest of
                 their information and also confirm that they'll be coming. We need our department heads
                 to review the unclaimed badges for their departments to check for any essential volunteers
                 who haven't claimed their badges.
-            path: /registration/placeholders?department_id={department_id}
+            - path: /registration/placeholders?department_id={department_id}
 
-          hotel_eligible:
-            name: Staffers Requesting Hotel Space
-            deadline: 2018-11-22
-            description: Double check that everyone in your department who you know needs hotel space has requested it.
-            path: /hotel/index?department_id={department_id}
+          - hotel_eligible:
+            - name: Staffers Requesting Hotel Space
+            - deadline: 2018-11-22
+            - description: Double check that everyone in your department who you know needs hotel space has requested it.
+            - path: /hotel/index?department_id={department_id}
 
-          tech_requirements:
-            name: Tech Requirements
-            deadline: 2018-11-29
-            description: What do you need in terms of laptops, projectors, cables, internet access, etc?
-            path: /dept_checklist/tech_requirements?department_id={department_id}
+          - tech_requirements:
+            - name: Tech Requirements
+            - deadline: 2018-11-29
+            - description: What do you need in terms of laptops, projectors, cables, internet access, etc?
+            - path: /dept_checklist/tech_requirements?department_id={department_id}
 
-          logistics:
-            name: Logistics Needs
-            deadline: 2018-11-29
-            description: What do you need brought from the warehouse?
-            path: /dept_checklist/logistics?department_id={department_id}
+          - logistics:
+            - name: Logistics Needs
+            - deadline: 2018-11-29
+            - description: What do you need brought from the warehouse?
+            - path: /dept_checklist/logistics?department_id={department_id}
 
-          printed_signs:
-            deadline: 2018-12-06
-            description: Other than a sign for your area, what printed signs/banners/forms do you need?
+          - printed_signs:
+            - deadline: 2018-12-06
+            - description: Other than a sign for your area, what printed signs/banners/forms do you need?
 
-          office_supplies:
-            deadline: 2018-12-06
-            description: Do you need any paper, pens, sharpies, tripods, whiteboards, scissors, staplers, etc?
+          - office_supplies:
+            - deadline: 2018-12-06
+            - description: Do you need any paper, pens, sharpies, tripods, whiteboards, scissors, staplers, etc?
 
-          custom_ribbons:
-            deadline: 2018-12-06
-            description: >
+          - custom_ribbons:
+            - deadline: 2018-12-06
+            - description: >
                 Besides the ribbons given out at registration, you may need your own ribbon type to help
                 manage access to certain restricted areas. If so, please let us know what they should say,
                 how many you'll need, and what color you'd like them to be. These ribbons will be given
@@ -628,13 +637,15 @@ reggie:
                 of ribbons are very expensive - please request a ribbon type only if you need it, and tell
                 us why you need it so we can make sure there's no duplication between departments.)
 
-          postcon_hours:
-            name: (After the Event) Marking and Rating Shifts
-            deadline: 2019-01-24
-            description: After the weekend is over, we'll want all department heads to ensure that their volunteers had their shifts marked and rated.
-            path: /jobs/signups?department_id={department_id}
-            email_post_con: True
+          - postcon_hours:
+            - name: (After the Event) Marking and Rating Shifts
+            - deadline: 2019-01-24
+            - description: >
+                After the weekend is over, we'll want all department heads to
+                ensure that their volunteers had their shifts marked and rated.
+            - path: /jobs/signups?department_id={department_id}
+            - email_post_con: True
 
         volunteer_checklist:
-          4: hotel_requests/hotel_item.html
-          5: signups/shifts_item.html
+          - 4: hotel_requests/hotel_item.html
+          - 5: signups/shifts_item.html

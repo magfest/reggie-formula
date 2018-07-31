@@ -2,7 +2,6 @@ base:
   'vagrant':
     - vagrant
     - reggie.devenv
-    - reggie_deploy.ssl
     - reggie_deploy.glusterfs
     - glusterfs.server
     - glusterfs.client

@@ -9,7 +9,7 @@
 %}
 
 {% do defaults.reggie.update(os_family_map) %}
-{% set reggie = salt['pillar.get']('reggie', default=defaults.reggie, merge=True) %}
+{% set reggie = salt['pillar.get']('reggie', default=defaults.reggie, merge=True, merge_nested_lists=False) %}
 
 {% if 'data_dir' not in reggie.plugins.ubersystem.config %}
   {% do reggie.plugins.ubersystem.config.update({
@@ -44,5 +44,17 @@
       reggie.db.host ~ ':' ~
       reggie.db.port ~ '/' ~
       reggie.db.name
+  }) %}
+{% endif %}
+
+{% if 'broker_url' not in reggie.plugins.ubersystem.config.secret %}
+  {% do reggie.plugins.ubersystem.config.secret.update({
+    'broker_url': reggie.queue.dialect ~
+      ('+' ~ reggie.queue.driver if reggie.queue.driver else '') ~ '://' ~
+      reggie.queue.username ~ ':' ~
+      reggie.queue.password ~ '@' ~
+      reggie.queue.host ~ ':' ~
+      reggie.queue.port ~ '/' ~
+      reggie.queue.name
   }) %}
 {% endif %}

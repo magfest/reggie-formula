@@ -4,6 +4,7 @@
 
 {%- from 'reggie/map.jinja' import reggie with context %}
 {%- from 'reggie/macros.jinja' import dump_ini with context %}
+{%- set env = salt['grains.get']('env') %}
 
 include:
   - reggie.python
@@ -38,14 +39,11 @@ reggie sideboard git latest:
     - target: {{ reggie.install_dir }}
 
 reggie chown {{ reggie.user }} {{ reggie.install_dir }}:
-  file.directory:
-    - name: {{ reggie.install_dir }}
-    - user: {{ reggie.user }}
-    - group: {{ reggie.group }}
-    - makedirs: True
-    - recurse:
-      - user
-      - group
+  cmd.run:
+    - name: chown -R {{ reggie.user }}:{{ reggie.group }} {{ reggie.install_dir }}
+    - onlyif: >
+        find {{ reggie.install_dir }} -type d \! -user {{ reggie.user }} | grep -q "." &&
+        find {{ reggie.install_dir }} -type d \! -group {{ reggie.group }} | grep -q "."
     - require:
       - reggie user
       - reggie sideboard git latest
@@ -83,7 +81,7 @@ reggie sideboard configuration:
     - contents: |
         {{ dump_ini(reggie.sideboard.config)|indent(8) }}
     - template: jinja
-    - show_changes: False
+    - show_changes: {% if env == 'dev' %}True{% else %}False{% endif %}
     - require:
       - reggie virtualenv
 
@@ -134,7 +132,7 @@ reggie {{ plugin_id }} configuration:
     - contents: |
         {{ dump_ini(plugin.config)|indent(8) }}
     - template: jinja
-    - show_changes: False
+    - show_changes: {% if env == 'dev' %}True{% else %}False{% endif %}
     - require:
       - reggie {{ plugin_id }} package install
 {% endif %}

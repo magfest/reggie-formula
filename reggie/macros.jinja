@@ -115,20 +115,27 @@ reggie {{ slug }} service running:
 {%- endmacro -%}
 
 
-{%- macro encode_ini(item, depth=1) -%}
+{%- macro encode_ini(section, depth=1) -%}
   {#- First process settings at the current level -#}
-  {%- for property, value in item.items() -%}
-    {%- if value is not mapping -%}
+  {%- set items = section.items() if section is mapping else section -%}
+  {%- set sub_sections = [] -%}
+  {%- for item in items -%}
+    {%- if item is mapping -%}
+{{ encode_ini(item, depth) }}
+    {%- else -%}
+      {%- set property, value = item -%}
+      {%- if value is not mapping and (value is string or value is not sequence or (value|length > 0 and value[0] is not mapping)) -%}
 {{ property ~ ' = ' ~ encode_ini_value(value) ~ '\n' }}
+      {%- else -%}
+        {%- do sub_sections.append((property, value)) -%}
+      {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
 
-  {#- Then recurse into each section -#}
-  {%- for section, options in item.items() -%}
-    {%- if options is mapping %}
-{{ ('[' * depth)  ~ section ~ (']' * depth) }}
+  {# Then recurse into each sub_section -#}
+  {%- for sub_section, options in sub_sections %}
+{{ ('[' * depth)  ~ sub_section ~ (']' * depth) }}
 {{ encode_ini(options, depth + 1) }}
-    {%- endif -%}
   {%- endfor -%}
 {%- endmacro -%}
 

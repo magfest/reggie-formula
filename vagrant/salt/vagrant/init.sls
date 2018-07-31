@@ -1,3 +1,5 @@
+{%- set certs_dir = salt['pillar.get']('ssl:certs_dir') %}
+
 # ============================================================================
 # Baseline configuration expected in reggie server.
 # ============================================================================
@@ -12,6 +14,21 @@ rsyslog installed and running:
     - enable: True
     - require:
       - pkg: rsyslog
+
+
+# ============================================================================
+# Install vagrant development certs
+# NEVER USE THESE FOR PRODUCTION
+# ============================================================================
+
+{% for file in ['vagrant.crt', 'vagrant.key', 'vagrant.pem'] %}
+{{ certs_dir }}/{{ file }}:
+  file.managed:
+    - name: {{ certs_dir }}/{{ file }}
+    - source: salt://vagrant/files/{{ file }}
+    - user: vagrant
+    - group: vagrant
+{% endfor %}
 
 
 # ============================================================================
