@@ -11,6 +11,12 @@
 {% do defaults.reggie.update(os_family_map) %}
 {% set reggie = salt['pillar.get']('reggie', default=defaults.reggie, merge=True, merge_nested_lists=False) %}
 
+{% set event_year = reggie.plugins.ubersystem.config.get('event_year', reggie.plugins.ubersystem.config.get('year')) %}
+{% do reggie.plugins.ubersystem.config.update({
+  'event_year': event_year,
+  'year': event_year,
+}) %}
+
 {% if 'data_dir' not in reggie.plugins.ubersystem.config %}
   {% do reggie.plugins.ubersystem.config.update({
     'data_dir': reggie.install_dir ~ '/data'

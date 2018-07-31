@@ -57,7 +57,7 @@ reggie:
       source: https://github.com/magfest/ubersystem.git
       config:
         path: /reggie
-        hostname: reggie.events
+        hostname: localhost
 
         # url_root should be the public-facing root of what you type
         # to get to this uber instance. do not include the url_prefix/path here.
