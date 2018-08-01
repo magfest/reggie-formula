@@ -121,8 +121,9 @@ reggie:
         hours_for_refund: 24
 
         code_of_conduct_url: ''
-        prereg_faq_url: ''
+        consent_form_url: ''
         contact_url: ''
+        prereg_faq_url: ''
 
         at_the_con: False
         post_con: False
@@ -223,6 +224,8 @@ reggie:
 
           panel_app_deadline: 2098-10-31
 
+          rock_island_deadline: ''
+
           # if any of these are unset or '', the corresponding section will not show up in the group type's checklist
           auction_start: ''
           band_panel_deadline: ''
@@ -318,3 +321,5 @@ reggie:
         dept_head_checklist: {}
 
         volunteer_checklist: {}
+
+        age_groups: {}
