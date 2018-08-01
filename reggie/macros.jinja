@@ -124,7 +124,11 @@ reggie {{ slug }} service running:
 {{ encode_ini(item, depth) }}
     {%- else -%}
       {%- set property, value = item -%}
-      {%- if value is not mapping and (value is string or value is not sequence or (value|length > 0 and value[0] is not mapping)) -%}
+      {%- if value is not mapping and (
+          value is string
+          or value is not sequence
+          or value|length == 0
+          or (value|length > 0 and value[0] is not mapping)) -%}
 {{ property ~ ' = ' ~ encode_ini_value(value) ~ '\n' }}
       {%- else -%}
         {%- do sub_sections.append((property, value)) -%}

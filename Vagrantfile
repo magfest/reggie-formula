@@ -30,6 +30,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider :virtualbox do |vb|
         vb.memory = 1536
         vb.cpus = 2
+        vb.name = 'reggie (super 2019) ' + Time.now.strftime("%Y-%m-%d %H:%M:%S.%L")
 
         # Allow symlinks to be created in /home/vagrant/reggie-formula.
         # Modify "home_vagrant_reggie-formula" to be different if you change the path.
@@ -46,6 +47,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
         # sudo -E apt-get -qy autoclean
         sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install libssh-dev python-git swapspace
+
+        mkdir -p /etc/salt
+        cat >> /etc/salt/grains << EOF
+event_name: super
+event_year: 2019
+EOF
+
     SHELL
 
     config.vm.provision :salt do |salt|
@@ -53,7 +61,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         salt.install_type = "git"
         salt.install_args = "v2018.3.2"
         salt.minion_config = "vagrant/salt/vagrant/files/salt_minion.conf"
-        salt.minion_id = "vagrant"
+        salt.minion_id = "reggie"
         salt.run_highstate = true
         salt.colorize = true
         salt.log_level = "info"

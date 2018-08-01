@@ -17,11 +17,11 @@ rsyslog installed and running:
 
 
 # ============================================================================
-# Install vagrant development certs
+# Install reggie development certs
 # NEVER USE THESE FOR PRODUCTION
 # ============================================================================
 
-{% for file in ['vagrant.crt', 'vagrant.key', 'vagrant.pem'] %}
+{% for file in ['reggie.crt', 'reggie.key', 'reggie.pem'] %}
 {{ certs_dir }}/{{ file }}:
   file.managed:
     - name: {{ certs_dir }}/{{ file }}

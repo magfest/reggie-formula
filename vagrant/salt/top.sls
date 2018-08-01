@@ -1,5 +1,5 @@
 base:
-  'vagrant':
+  '*reggie*':
     - vagrant
     - reggie.devenv
     - reggie_deploy.glusterfs
