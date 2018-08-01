@@ -34,7 +34,7 @@ reggie:
       priority_plugins: ['uber']
 
       cherrypy:
-        engine.autoreload.on: True
+        engine.autoreload.on: False  # CherryPy autoreloader is broken on Python 3.6
         server.socket_host: '0.0.0.0'
         server.socket_port: 8282
         server.socket_timeout: 1
