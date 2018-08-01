@@ -109,7 +109,7 @@ reggie:
 
         # The number of hours after prereg_open that the "Request Hotel Booking Info"
         # checkbox will be available.
-        prereg_request_hotel_info_duration: 2400
+        prereg_request_hotel_info_duration: 0
 
         # This will be used as the sender for the hotel booking info email.
         prereg_hotel_info_email_sender: ''
