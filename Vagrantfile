@@ -3,6 +3,10 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
 VAGRANTFILE_API_VERSION = "2"
 Vagrant.require_version ">= 2"
 
+ENV['EVENT_NAME'] = ENV['EVENT_NAME'] || 'super'
+ENV['EVENT_YEAR'] = ENV['EVENT_YEAR'] || '2019'
+
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "bento/ubuntu-18.04"
     config.vm.hostname = "localhost"
@@ -30,7 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider :virtualbox do |vb|
         vb.memory = 1536
         vb.cpus = 2
-        vb.name = 'reggie (super 2019) ' + Time.now.strftime("%Y-%m-%d %H:%M:%S.%L")
+        vb.name = 'reggie (%s %s) %s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime("%Y-%m-%d %H:%M:%S.%L")]
 
         # Allow symlinks to be created in /home/vagrant/reggie-formula.
         # Modify "home_vagrant_reggie-formula" to be different if you change the path.
@@ -38,23 +42,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/home_vagrant_reggie-formula", "1"]
     end
 
-    config.vm.provision :shell, inline: <<-SHELL
+    config.vm.provision :shell, env: {"EVENT_NAME"=>ENV['EVENT_NAME'], "EVENT_YEAR"=>ENV['EVENT_YEAR']}, inline: "
         set -e
         # Upgrade all packages to the latest version, very slow
         # export DEBIAN_FRONTEND=noninteractive
         # export DEBIAN_PRIORITY=critical
         # sudo -E apt-get -qy update
-        # sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
+        # sudo -E apt-get -qy -o \"Dpkg::Options::=--force-confdef\" -o \"Dpkg::Options::=--force-confold\" upgrade
         # sudo -E apt-get -qy autoclean
-        sudo -E apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" install libssh-dev python-git swapspace
+        sudo -E apt-get -qy -o \"Dpkg::Options::=--force-confdef\" -o \"Dpkg::Options::=--force-confold\" install libssh-dev python-git swapspace
 
         mkdir -p /etc/salt
         cat >> /etc/salt/grains << EOF
-event_name: super
-event_year: 2019
+event_name: ${EVENT_NAME}
+event_year: ${EVENT_YEAR}
 EOF
 
-    SHELL
+"
 
     config.vm.provision :salt do |salt|
         salt.masterless = true
@@ -68,8 +72,10 @@ EOF
         salt.verbose = true
     end
 
-    config.vm.post_up_message = <<-MESSAGE
+    config.vm.post_up_message = "
   All done!
+      event_name: #{ENV['EVENT_NAME']}
+      event_year: #{ENV['EVENT_YEAR']}
 
   To login to your new development machine run:
       vagrant ssh
@@ -84,7 +90,7 @@ EOF
 
   The reggie virtualenv has been added to your path, along with a custom python startup:
       export PYTHONSTARTUP='/home/vagrant/.pythonstartup.py'
-      export PATH="reggie-formula/reggie-deploy/env/bin:$PATH"
+      export PATH=\"reggie-formula/reggie-deploy/env/bin:$PATH\"
 
   The following services have been installed with systemd:
       reggie
@@ -97,5 +103,5 @@ EOF
       Username: magfest@example.com
       Password: magfest
 
-    MESSAGE
+"
 end
