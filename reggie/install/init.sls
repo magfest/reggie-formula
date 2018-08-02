@@ -37,6 +37,9 @@ reggie sideboard git latest:
   git.latest:
     - name: https://github.com/magfest/sideboard.git
     - target: {{ reggie.install_dir }}
+    - rev: master
+    - branch: master
+    - remote: origin
 
 reggie chown {{ reggie.user }} {{ reggie.install_dir }}:
   cmd.run:
@@ -111,6 +114,9 @@ reggie {{ plugin_id }} git latest:
     - name: {{ plugin.source }}
     - user: {{ reggie.user }}
     - target: {{ reggie.install_dir }}/plugins/{{ plugin.name }}
+    - rev: master
+    - branch: master
+    - remote: origin
     - require:
       - reggie {{ previous_plugin_ids[loop.index0] }} requirements update
 
