@@ -318,7 +318,13 @@ reggie:
             own_table: Dedicated table
             rock_island: Rock Island
 
-        dept_head_checklist: {}
+        dept_head_checklist:
+          creating_shifts:
+            deadline: 1970-01-01
+            description: >
+                We have the ability to import shifts from last year's MAGFest, if you are only
+                making minor changes and want assistance with this step, please let us know.
+            path: /jobs/index?department_id={department_id}
 
         volunteer_checklist: {}
 
