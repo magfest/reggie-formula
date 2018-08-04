@@ -158,7 +158,7 @@ reggie:
 
         max_badge_sales: 22250
         max_dealers: 20
-        max_dealer_apps: 500
+        max_dealer_apps: 0
 
         preassigned_badge_types: []
 
