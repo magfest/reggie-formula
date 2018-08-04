@@ -24,8 +24,11 @@ reggie {{ slug }} rsyslog conf:
   file.managed:
     - name: /etc/rsyslog.d/{{ slug }}.conf
     - contents: |
-        if $programname == '{{ slug }}' then {{ log }}
-        if $programname == '{{ slug }}' then ~
+        if $programname == '{{ slug }}' then {
+          $template bare_msg_format,"%msg%\n"
+          {{ log }};bare_msg_format
+          stop
+        }
     - listen_in:
       - service: rsyslog
 

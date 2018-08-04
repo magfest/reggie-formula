@@ -1,4 +1,4 @@
-{%- from 'nginx_macros.jinja' import nginx_ssl_config, nginx_proxy_config -%}
+{%- from 'macros.jinja' import nginx_ssl_config, nginx_proxy_config -%}
 {%- set minion_id = salt['grains.get']('id') %}
 {%- set ssl_dir = '/etc/ssl' -%}
 {%- set certs_dir = ssl_dir ~ '/certs' -%}
