@@ -152,11 +152,11 @@ reggie:
         band_email_signature: ''
 
         out_of_shirts: False
-        shirts_per_staffer: 2
+        shirts_per_staffer: 1
         staff_eligible_for_swag_shirt: False
         separate_staff_merch: False
 
-        max_badge_sales: 22250
+        max_badge_sales: 2000
         max_dealers: 20
         max_dealer_apps: 0
 
