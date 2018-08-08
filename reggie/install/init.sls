@@ -52,9 +52,9 @@ reggie chown {{ reggie.user }} {{ reggie.install_dir }}:
       - reggie sideboard git latest
 
 {%- for dir in ['mounted_data_dir', 'data_dir'] %}
-reggie chown {{ reggie.user }} {{ reggie.plugins.ubersystem.config[dir] }}:
+reggie chown {{ reggie.user }} {{ reggie[dir] }}:
   file.directory:
-    - name: {{ reggie.plugins.ubersystem.config[dir] }}
+    - name: {{ reggie[dir] }}
     - user: {{ reggie.user }}
     - group: {{ reggie.group }}
     - makedirs: True

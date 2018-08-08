@@ -13,6 +13,8 @@ reggie:
   user: vagrant
   group: vagrant
   install_dir: /home/vagrant/reggie-formula/reggie-deploy
+  data_dir: /home/vagrant/reggie_data
+  mounted_data_dir: /home/vagrant/reggie_data/mnt
 
   plugins:
     magprime:
@@ -21,8 +23,58 @@ reggie:
 
     ubersystem:
       config:
-        data_dir: /home/vagrant/reggie_data
-        mounted_data_dir: /home/vagrant/reggie_data/mnt
+        hostname: 'localhost:4443'
+
+        code_of_conduct_url: 'http://super.magfest.org/codeofconduct'
+        consent_form_url: 'http://super.magfest.org/parentalconsentform'
+        contact_url: 'http://super.magfest.org/contact'
+        prereg_faq_url: 'http://super.magfest.org/faq'
+
+        panels_twilio_number: '+12405415595'
+        tabletop_twilio_number: '+15713646627'
+
+        preassigned_badge_types: ['staff_badge', 'supporter_badge']
+
+        admin_email: MAGFest Sys Admin <sysadmin@magfest.org>
+        developer_email: MAGFest Software <code@magfest.org>
+        security_email: MAGFest Security <security@magfest.org>
+
+        regdesk_email: MAGFest Registration <regsupport@magfest.org>
+        regdesk_email_signature: '- MAGFest Registration Department'
+
+        staff_email: MAGFest Staffing <stops@magfest.org>
+        stops_email_signature: '- MAGFest Staff Operations'
+
+        marketplace_email: MAGFest Marketplace <marketplace@magfest.org>
+        marketplace_email_signature: '- MAGFest Marketplace'
+
+        panels_email: MAGFest Panels <panels@magfest.org>
+        peglegs_email_signature: '- MAGFest Panels Department'
+
+        guest_email: MAGFest Guests <guests@magfest.org>
+        guest_email_signature: '- MAGFest Guest Department'
+
+        band_email: MAGFest Music Department <music@magfest.org>
+        band_email_signature: '- MAGFest Music Department'
+
+        prereg_hotel_info_email_sender: Do Not Reply <noreply@magfest.org>
+        prereg_hotel_info_email_signature: '- MAGFest'
+
+        secret:
+          barcode_key: 'TEST_ONLY'
+          barcode_salt: 255
+          barcode_event_id: 255
+
+        enums:
+          interest:
+            lan: LAN
+
+          job_location:
+            chipspace: Chipspace
+            food_prep: Staff Suite
+            staff_support: Staff Support
+            tabletop: Tabletop
+            tech_ops: Tech Ops
 
 
 glusterfs:
@@ -77,16 +129,20 @@ haproxy:
 
         - 'path_starts_with_static path_beg -i /reggie/static/ /reggie/static_views/ /static/ /static_views/'
 
-      httpresponses:
-        {%- for header in ['Location', 'Refresh'] %}
-        - 'replace-value {{ header }} https://([^/]*)(?:/reggie)?(.*) https://\1:4443\2 if header_{{ header|lower }}_exists'
-        {%- endfor %}
+      options:
+        - forwardfor
 
       httprequests:
+        - 'set-header X-Real-IP %[src]'
         {%- for path in ['reggie', 'uber'] %}
         - 'redirect location https://%[hdr(host)]%[url,regsub(^/{{ path }}/?,/,i)] code 302 if path_is_{{ path }} OR path_starts_with_{{ path }}'
         {%- endfor %}
         - 'set-path /reggie%[path] if !path_is_profiler !path_starts_with_profiler !path_is_stats !path_starts_with_stats'
+
+      httpresponses:
+        {%- for header in ['Location', 'Refresh'] %}
+        - 'replace-value {{ header }} https://([^/]*)(?:/reggie)?(.*) https://\1:4443\2 if header_{{ header|lower }}_exists'
+        {%- endfor %}
 
       use_backends: 'reggie_http_backend if path_starts_with_static'
       default_backend: 'reggie_https_backend'

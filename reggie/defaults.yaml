@@ -56,18 +56,10 @@ reggie:
       name: uber
       source: https://github.com/magfest/ubersystem.git
       config:
-        path: /reggie
+        cherrypy_mount_path: /reggie
+        path: ''
         hostname: localhost
-
-        # url_root should be the public-facing root of what you type
-        # to get to this uber instance. do not include the url_prefix/path here.
-        #
-        # if you are behind a proxy like apache, this should be the PUBLIC
-        # facing address and NOT the internal cherrypy server:
-        # url_root: http://public.facing.domain.com
-        #
         url_root: 'https://%(hostname)s'
-        url_base: '%(url_root)s%(path)s'
 
         organization_name: Reginald Magpie, Inc
         event_year: 2099
@@ -194,6 +186,8 @@ reggie:
 
         secret: {}
 
+        data_dirs: {}
+
         dates:
           prereg_open: 2098-05-01
           shifts_created: 2098-11-02
@@ -305,7 +299,8 @@ reggie:
 
           dealer_wares: {}
 
-          event_location: {}
+          event_location:
+            concerts: Concerts
 
           sandwich: {}
 

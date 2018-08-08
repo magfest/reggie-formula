@@ -17,27 +17,23 @@
   'year': event_year,
 }) %}
 
-{% if 'data_dir' not in reggie.plugins.ubersystem.config %}
-  {% do reggie.plugins.ubersystem.config.update({
-    'data_dir': reggie.install_dir ~ '/data'
-  }) %}
+{% if 'data_dir' not in reggie %}
+  {% do reggie.update({'data_dir': reggie.install_dir ~ '/data'}) %}
 {% endif %}
 
-{% if 'mounted_data_dir' not in reggie.plugins.ubersystem.config %}
-  {% do reggie.plugins.ubersystem.config.update({
-    'mounted_data_dir': reggie.plugins.ubersystem.config.data_dir ~ '/mnt'
-  }) %}
+{% if 'mounted_data_dir' not in reggie %}
+  {% do reggie.update({'mounted_data_dir': reggie.data_dir ~ '/mnt'}) %}
 {% endif %}
 
-{% if 'uploaded_files_dir' not in reggie.plugins.ubersystem.config %}
-  {% do reggie.plugins.ubersystem.config.update({
-    'uploaded_files_dir': reggie.plugins.ubersystem.config.mounted_data_dir ~ '/uploaded_files'
+{% if 'uploaded_files_dir' not in reggie.plugins.ubersystem.config.data_dirs %}
+  {% do reggie.plugins.ubersystem.config.data_dirs.update({
+    'uploaded_files_dir': reggie.mounted_data_dir ~ '/uploaded_files'
   }) %}
 {% endif %}
 
 {% if 'beat_schedule_filename' not in reggie.plugins.ubersystem.config.celery %}
   {% do reggie.plugins.ubersystem.config.celery.update({
-    'beat_schedule_filename': reggie.plugins.ubersystem.config.data_dir ~ '/celerybeat-schedule.db'
+    'beat_schedule_filename': reggie.data_dir ~ '/celerybeat-schedule.db'
   }) %}
 {% endif %}
 
