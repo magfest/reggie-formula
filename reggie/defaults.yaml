@@ -92,8 +92,8 @@ reggie:
 
         api_enabled: True
         hotels_enabled: True
-        mits_enabled: True
-        mivs_enabled: True
+        mits_enabled: False
+        mivs_enabled: False
         panels_enabled: True
         attractions_enabled: True
 
