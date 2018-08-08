@@ -57,8 +57,6 @@ reggie:
       source: https://github.com/magfest/ubersystem.git
       config:
         cherrypy_mount_path: /reggie
-        path: ''
-        hostname: localhost
         url_root: 'https://%(hostname)s'
 
         organization_name: Reginald Magpie, Inc

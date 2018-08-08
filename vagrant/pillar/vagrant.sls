@@ -23,6 +23,7 @@ reggie:
 
     ubersystem:
       config:
+        path: ''
         hostname: 'localhost:4443'
 
         code_of_conduct_url: 'http://super.magfest.org/codeofconduct'
