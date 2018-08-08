@@ -17,7 +17,7 @@ reggie user:
     - gid: {{ reggie.group }}
     - name: {{ reggie.user }}
 
-reggie service:
+reggie.service:
   file.managed:
     - name: /lib/systemd/system/reggie.service
     - contents: |
@@ -32,6 +32,14 @@ reggie service:
         [Install]
         WantedBy=multi-user.target
     - template: jinja
+
+  service.enabled:
+    - name: reggie
+    - require:
+      - file: reggie.service
+    - watch_any:
+      - file: reggie.service
+
 
 reggie sideboard git latest:
   git.latest:
