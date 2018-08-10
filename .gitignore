@@ -1,5 +1,6 @@
 .vagrant/
-reggie-deploy/
+reggie_install/
+infrastructure/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -37,6 +37,12 @@
   }) %}
 {% endif %}
 
+{% if 'hostname' not in reggie.plugins.ubersystem.config %}
+  {% do reggie.plugins.ubersystem.config.update({
+    'hostname': reggie.host ~ (':' ~ reggie.port if reggie.port|string not in ['443', '80'] else '')
+  }) %}
+{% endif %}
+
 {% if 'sqlalchemy_url' not in reggie.plugins.ubersystem.config.secret %}
   {% do reggie.plugins.ubersystem.config.secret.update({
     'sqlalchemy_url': reggie.db.dialect ~

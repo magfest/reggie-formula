@@ -1,0 +1,25 @@
+id: reggie
+master: 127.0.0.1
+
+grains:
+  env: dev
+  is_vagrant: True
+  private_interface: eth0
+  roles:
+    - reggie
+    - queue
+    - sessions
+    - files
+    - web
+    - loadbalancer
+    - scheduler
+    - worker
+    - db
+
+mine_functions:
+  private_ip:
+    - mine_function: network.interface_ip
+    - eth0
+  public_ip:
+    - mine_function: network.interface_ip
+    - eth0

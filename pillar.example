@@ -1,7 +1,7 @@
 reggie:
   user: reggie
   group: reggie
-  install_dir: /srv/reggie-deploy
+  install_dir: /srv/reggie_install
 
   plugins:
     magprime:

@@ -1,27 +1,14 @@
-id: reggie
-file_client: local
-master_type: disable
-
 state_verbose: True
 state_output: changes
-
-grains:
-  env: dev
-  is_vagrant: True
-  roles:
-    - queue
-    - sessions
-    - files
-    - web
-    - loadbalancer
-    - scheduler
-    - worker
-    - db
 
 use_superseded:
   - module.run
 
 fileserver_limit_traversal: True
+file_ignore_regex:
+  - '/\.git($|/)'
+  - '/\.vagrant($|/)'
+  - '/reggie_install($|/)'
 
 fileserver_backend:
   - roots
@@ -29,20 +16,25 @@ fileserver_backend:
 
 file_roots:
   base:
-    - /home/vagrant/reggie-formula/vagrant/salt
+    - /home/vagrant/reggie-formula/vagrant
+    - /home/vagrant/reggie-formula/infrastructure/reggie_deploy
     - /home/vagrant/reggie-formula
 
-pillar_roots:
-  base:
-    - /home/vagrant/reggie-formula/vagrant/pillar
+# pillar_roots:
+#   base:
+#     - /home/vagrant/reggie-formula/vagrant/pillar
 
+ext_pillar:
+  - stack:
+    - /home/vagrant/reggie-formula/infrastructure/reggie_config/stack.cfg
+
+gitfs_disable_saltenv_mapping: True
+gitfs_update_interval: 300
 gitfs_remotes:
-  - https://github.com/magfest/ufw-formula.git
-  - https://github.com/magfest/fail2ban-formula.git
   - https://github.com/magfest/glusterfs-formula.git
   - https://github.com/magfest/haproxy-formula.git
   - https://github.com/magfest/nginx-formula.git
   - https://github.com/magfest/postgres-formula.git
   - https://github.com/magfest/rabbitmq-formula.git
   - https://github.com/magfest/redis-formula.git
-  - https://github.com/magfest/letsencrypt-formula.git
+  - https://github.com/magfest/ufw-formula.git

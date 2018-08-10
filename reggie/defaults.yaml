@@ -2,6 +2,9 @@ reggie:
   user: reggie
   group: reggie
   install_dir: /srv/reggie
+  host: localhost
+  port: 443
+  nonssl_port: 80
 
   db:
     dialect: postgres
