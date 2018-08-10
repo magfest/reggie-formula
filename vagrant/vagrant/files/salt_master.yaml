@@ -20,10 +20,6 @@ file_roots:
     - /home/vagrant/reggie-formula/infrastructure/reggie_deploy
     - /home/vagrant/reggie-formula
 
-# pillar_roots:
-#   base:
-#     - /home/vagrant/reggie-formula/vagrant/pillar
-
 ext_pillar:
   - stack:
     - /home/vagrant/reggie-formula/infrastructure/reggie_config/stack.cfg

@@ -84,7 +84,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         salt.minion_id = 'reggie'
         salt.minion_key = 'vagrant/vagrant/files/reggie.pem'
         salt.minion_pub = 'vagrant/vagrant/files/reggie.pub'
-        salt.run_highstate = true
+        salt.run_highstate = false
+        salt.orchestrations = ['orchestration.vagrant_up']
         salt.colorize = true
         salt.log_level = 'info'
         salt.verbose = true

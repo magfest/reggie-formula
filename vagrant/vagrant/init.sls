@@ -1,19 +1,5 @@
 {%- set certs_dir = salt['pillar.get']('ssl:certs_dir') %}
 
-saltutil.sync_all:
-  module.run:
-    - saltutil.sync_all
-
-saltutil.refresh_pillar:
-  module.run:
-    - saltutil.refresh_pillar: []
-
-mine.update:
-  module.run:
-    - saltutil.refresh_pillar: []
-    - reload_modules: True
-
-
 # ============================================================================
 # Baseline configuration expected in reggie server.
 # ============================================================================
@@ -59,7 +45,16 @@ rsyslog installed and running:
     - template: jinja
 {% endfor %}
 
-/etc/salt/minion:
+{% for file in ['master', 'minion'] %}
+/etc/salt/{{ file }}:
   file.managed:
-    - name: /etc/salt/minion
-    - source: salt://vagrant/files/salt_minion.yaml
+    - name: /etc/salt/{{ file }}
+    - source: salt://vagrant/files/salt_{{ file }}.yaml
+
+  service.running:
+    - name: salt-{{ file }}
+    - enable: True
+    - order: last
+    - watch:
+      - file: /etc/salt/{{ file }}
+{% endfor %}
