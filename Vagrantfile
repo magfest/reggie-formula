@@ -61,8 +61,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             cd /home/vagrant/reggie-formula/infrastructure
             git remote add origin https://github.com/magfest/infrastructure.git
             git config core.sparsecheckout true
-            echo 'reggie_config/*' >> .git/info/sparse-checkout
-            echo 'reggie_deploy/*' >> .git/info/sparse-checkout
+            echo '/docs/*' >> .git/info/sparse-checkout
+            echo '/reggie_config/*' >> .git/info/sparse-checkout
+            echo '/reggie_deploy/*' >> .git/info/sparse-checkout
             echo '/README.md' >> .git/info/sparse-checkout
             git pull --depth=1 origin master
             git branch --set-upstream-to=origin/master master
