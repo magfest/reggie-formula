@@ -2,6 +2,11 @@
 # Installs the Python packages and libraries required by reggie.
 # ============================================================================
 
+reggie pip install:
+  pkg.installed:
+    - name: python-pip
+    - reload_modules: True
+
 reggie python install:
   pkg.installed:
     - reload_modules: True
