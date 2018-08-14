@@ -256,8 +256,7 @@ reggie:
           group_discount: 10
           presell_one_days: False
 
-          attendee:
-            2099-01-03: 85
+          attendee: {}
 
           stocks: {}
 
