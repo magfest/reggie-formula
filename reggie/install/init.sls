@@ -13,9 +13,13 @@ include:
 reggie user:
   group.present:
     - name: {{ reggie.group }}
+    - order: first
   user.present:
     - gid: {{ reggie.group }}
     - name: {{ reggie.user }}
+    - order: first
+    - require:
+      - group: {{ reggie.group }}
 
 reggie.service:
   file.managed:
