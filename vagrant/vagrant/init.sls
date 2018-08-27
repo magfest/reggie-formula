@@ -56,16 +56,9 @@ vagrant file.blockreplace {{ dir }}/.bash_aliases:
     - template: jinja
     - require:
       - file: file.managed {{ dir }}/.bash_aliases
-    - marker_start: |
-        # ==========================================================
-        # START BLOCK MANAGED BY SALT (vagrant)
-        # ==========================================================
-    - content: |
-        alias salt-job='salt-run --out highstate jobs.lookup_jid'
-    - marker_end: |
-        # ==========================================================
-        # END BLOCK MANAGED BY SALT (vagrant)
-        # ==========================================================
+    - marker_start: '# ==== START BLOCK MANAGED BY SALT (reggie.devenv) ===='
+    - content: alias salt-job='salt-run --out highstate jobs.lookup_jid'
+    - marker_end: '# ==== END BLOCK MANAGED BY SALT (reggie.devenv) ===='
 {%- endfor %}
 
 reggie.devenv file.blockreplace /home/vagrant/.bash_aliases:
@@ -76,15 +69,9 @@ reggie.devenv file.blockreplace /home/vagrant/.bash_aliases:
     - template: jinja
     - require:
       - file: file.managed /home/vagrant/.bash_aliases
-    - marker_start: |
-        # ==========================================================
-        # START BLOCK MANAGED BY SALT (reggie.devenv)
-        # ==========================================================
+    - marker_start: '# ==== START BLOCK MANAGED BY SALT (reggie.devenv) ===='
     - source: salt://reggie/devenv/files/bash_aliases
-    - marker_end: |
-        # ==========================================================
-        # END BLOCK MANAGED BY SALT (reggie.devenv)
-        # ==========================================================
+    - marker_end: '# ==== END BLOCK MANAGED BY SALT (reggie.devenv) ===='
 
 {% for file in ['master', 'minion'] %}
 /etc/salt/{{ file }}:

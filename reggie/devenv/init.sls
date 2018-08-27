@@ -20,12 +20,6 @@ reggie file.blockreplace /root/.bash_aliases:
     - template: jinja
     - require:
       - file: reggie file.managed /root/.bash_aliases
-    - marker_start: |
-        # ==========================================================
-        # START BLOCK MANAGED BY SALT (reggie.devenv)
-        # ==========================================================
+    - marker_start: '# ==== START BLOCK MANAGED BY SALT (reggie.devenv) ===='
     - source: salt://reggie/devenv/files/bash_aliases
-    - marker_end: |
-        # ==========================================================
-        # END BLOCK MANAGED BY SALT (reggie.devenv)
-        # ==========================================================
+    - marker_end: '# ==== END BLOCK MANAGED BY SALT (reggie.devenv) ===='
