@@ -18,7 +18,7 @@ fileserver_backend:
 file_roots:
   base:
     - /home/vagrant/reggie-formula/vagrant
-    - /home/vagrant/reggie-formula/infrastructure/reggie_deploy
+    - /home/vagrant/reggie-formula/infrastructure/reggie_state
     - /home/vagrant/reggie-formula
 
 ext_pillar:

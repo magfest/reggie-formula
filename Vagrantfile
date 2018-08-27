@@ -55,7 +55,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # Install some prerequisites
         sudo -E apt-get -qy install libssh-dev python-git swapspace
 
-        # Create a sparse checkout of the infrastructure repo with only the reggie_config and reggie_deploy dirs
+        # Create a sparse checkout of the infrastructure repo with only the reggie_config and reggie_state dirs
         if [ ! -d '/home/vagrant/reggie-formula/infrastructure/.git' ]; then
             git init /home/vagrant/reggie-formula/infrastructure
             cd /home/vagrant/reggie-formula/infrastructure
@@ -63,7 +63,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             git config core.sparsecheckout true
             echo '/docs/*' >> .git/info/sparse-checkout
             echo '/reggie_config/*' >> .git/info/sparse-checkout
-            echo '/reggie_deploy/*' >> .git/info/sparse-checkout
+            echo '/reggie_state/*' >> .git/info/sparse-checkout
             echo '/README.md' >> .git/info/sparse-checkout
             git pull --depth=1 origin master
             git branch --set-upstream-to=origin/master master

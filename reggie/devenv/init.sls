@@ -2,10 +2,30 @@
 # Sets up a nice dev environment with a helpful Python REPL and bash aliases.
 # ============================================================================
 
-{% for file in ['bash_aliases', 'pythonstartup.py'] %}
-reggie /root/.{{ file }}:
+reggie /root/.pythonstartup.py:
   file.managed:
-    - name: /root/.{{ file }}
-    - source: salt://reggie/devenv/files/{{ file }}
+    - name: /root/.pythonstartup.py
+    - source: salt://reggie/devenv/files/pythonstartup.py
     - template: jinja
-{% endfor %}
+
+reggie file.managed /root/.bash_aliases:
+  file.managed:
+    - name: /root/.bash_aliases
+
+reggie file.blockreplace /root/.bash_aliases:
+  file.blockreplace:
+    - name: /root/.bash_aliases
+    - append_if_not_found: True
+    - append_newline: True
+    - template: jinja
+    - require:
+      - file: reggie file.managed /root/.bash_aliases
+    - marker_start: |
+        # ==========================================================
+        # START BLOCK MANAGED BY SALT (reggie.devenv)
+        # ==========================================================
+    - source: salt://reggie/devenv/files/bash_aliases
+    - marker_end: |
+        # ==========================================================
+        # END BLOCK MANAGED BY SALT (reggie.devenv)
+        # ==========================================================

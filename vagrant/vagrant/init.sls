@@ -35,15 +35,56 @@ rsyslog installed and running:
 # Vagrant dev environment
 # ============================================================================
 
-{% for file in ['bash_aliases', 'pythonstartup.py'] %}
-/home/vagrant/.{{ file }}:
+/home/vagrant/.pythonstartup.py:
   file.managed:
-    - name: /home/vagrant/.{{ file }}
-    - source: salt://reggie/devenv/files/{{ file }}
+    - name: /home/vagrant/.pythonstartup.py
+    - source: salt://reggie/devenv/files/pythonstartup.py
     - user: vagrant
     - group: vagrant
     - template: jinja
-{% endfor %}
+
+{%- for dir in ['/root', '/home/vagrant'] %}
+file.managed {{ dir }}/.bash_aliases:
+  file.managed:
+    - name: {{ dir }}/.bash_aliases
+
+vagrant file.blockreplace {{ dir }}/.bash_aliases:
+  file.blockreplace:
+    - name: {{ dir }}/.bash_aliases
+    - append_if_not_found: True
+    - append_newline: True
+    - template: jinja
+    - require:
+      - file: file.managed {{ dir }}/.bash_aliases
+    - marker_start: |
+        # ==========================================================
+        # START BLOCK MANAGED BY SALT (vagrant)
+        # ==========================================================
+    - content: |
+        alias salt-job='salt-run --out highstate jobs.lookup_jid'
+    - marker_end: |
+        # ==========================================================
+        # END BLOCK MANAGED BY SALT (vagrant)
+        # ==========================================================
+{%- endfor %}
+
+reggie.devenv file.blockreplace /home/vagrant/.bash_aliases:
+  file.blockreplace:
+    - name: /home/vagrant/.bash_aliases
+    - append_if_not_found: True
+    - append_newline: True
+    - template: jinja
+    - require:
+      - file: file.managed /home/vagrant/.bash_aliases
+    - marker_start: |
+        # ==========================================================
+        # START BLOCK MANAGED BY SALT (reggie.devenv)
+        # ==========================================================
+    - source: salt://reggie/devenv/files/bash_aliases
+    - marker_end: |
+        # ==========================================================
+        # END BLOCK MANAGED BY SALT (reggie.devenv)
+        # ==========================================================
 
 {% for file in ['master', 'minion'] %}
 /etc/salt/{{ file }}:
