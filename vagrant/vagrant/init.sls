@@ -56,9 +56,9 @@ vagrant file.blockreplace {{ dir }}/.bash_aliases:
     - template: jinja
     - require:
       - file: file.managed {{ dir }}/.bash_aliases
-    - marker_start: '# ==== START BLOCK MANAGED BY SALT (reggie.devenv) ===='
+    - marker_start: '# ==== START BLOCK MANAGED BY SALT (vagrant) ===='
     - content: alias salt-job='salt-run --out highstate jobs.lookup_jid'
-    - marker_end: '# ==== END BLOCK MANAGED BY SALT (reggie.devenv) ===='
+    - marker_end: '# ==== END BLOCK MANAGED BY SALT (vagrant) ===='
 {%- endfor %}
 
 reggie.devenv file.blockreplace /home/vagrant/.bash_aliases:
