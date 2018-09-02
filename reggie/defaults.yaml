@@ -2,6 +2,7 @@ reggie:
   user: reggie
   group: reggie
   install_dir: /srv/reggie
+  extra_files: {}
   host: localhost
   port: 443
   nonssl_port: 80

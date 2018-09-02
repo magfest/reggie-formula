@@ -164,3 +164,21 @@ reggie {{ plugin_id }} requirements update:
     - require:
       - reggie {{ plugin_id }} package install
 {% endfor %}
+
+{% for path, contents in reggie.extra_files.items() %}
+{% set absolute_path = path if path.startswith('/') else reggie.install_dir ~ '/' ~ path %}
+{% set file_spec = {'contents': contents} if contents is string else contents %}
+{{ absolute_path }}:
+  file.managed:
+    - name: {{ absolute_path }}
+    - user: {{ reggie.user }}
+    - group: {{ reggie.group }}
+    {% for key, value in file_spec.items() %}
+    {% if key == 'contents' %}
+    - contents: |
+        {{ value|indent(8) }}
+    {% else %}
+    - {{ key }}: {{ value }}
+    {% endif %}
+    {% endfor %}
+{% endfor %}
