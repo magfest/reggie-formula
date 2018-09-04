@@ -6,8 +6,32 @@
 {%- from 'reggie/macros.jinja' import dump_ini with context %}
 {%- set env = salt['grains.get']('env') %}
 
-include:
-  - reggie.python
+
+# Install the python dependencies
+reggie pip install:
+  pkg.installed:
+    - name: python-pip
+    - reload_modules: True
+
+reggie python install:
+  pkg.installed:
+    - reload_modules: True
+    - pkgs:
+      - python
+      - python-pip
+      - python3
+      - python3-pip
+      - python3-tk
+      - libpq-dev        # for psycopg
+      - build-essential  # for python-prctl
+      - libcap-dev       # for python-prctl
+      - libjpeg-dev      # for treepoem
+      - ghostscript      # for treepoem
+
+  pip.installed:
+    - name: virtualenv
+    - bin_env: /usr/bin/pip3
+
 
 # Create the reggie user and group
 reggie user:
@@ -85,7 +109,7 @@ reggie virtualenv:
     - python: /usr/bin/python3
     - system_site_packages: False
     - require:
-      - sls: reggie.python
+      - pip: virtualenv
       - reggie chown {{ reggie.user }} {{ reggie.install_dir }}
 
 reggie sideboard configuration:
