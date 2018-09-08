@@ -11,6 +11,7 @@ reggie /root/.pythonstartup.py:
 reggie file.managed /root/.bash_aliases:
   file.managed:
     - name: /root/.bash_aliases
+    - replace: False
 
 reggie file.blockreplace /root/.bash_aliases:
   file.blockreplace:

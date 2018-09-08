@@ -47,6 +47,7 @@ rsyslog installed and running:
 file.managed {{ dir }}/.bash_aliases:
   file.managed:
     - name: {{ dir }}/.bash_aliases
+    - replace: False
 
 vagrant file.blockreplace {{ dir }}/.bash_aliases:
   file.blockreplace:
