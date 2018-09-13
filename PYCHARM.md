@@ -2,8 +2,8 @@
 
 You can use any development environment you want to develop Reggie.
 
-[PyCharm](https://www.jetbrains.com/pycharm/) is popular as an IDE
-for a variety of reasons include ease of use for running unit tests,
+[PyCharm](https://www.jetbrains.com/pycharm/) is a popular IDE
+for a variety of reasons including: ease of use for running unit tests,
 code completion, debugging, etc...
 
 Before starting here, make sure you've followed the setup instructions

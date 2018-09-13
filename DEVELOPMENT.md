@@ -50,7 +50,48 @@ anything in development-defaults.ini, which overrides anything in
 configspeci.ini.
 
 You can put new stuff in development.ini by modifying the YAML files under
-infrastructure/reggie_config.
+`infrastructure/reggie_config`.
+
+
+# Re-Deploying
+
+If there are local config changes, or changes introduced from github
+(this happens from time to time), or if you want to make sure you have the
+very latest, then follow this procedure to re-deploy. You'll need a decently
+fast Internet connection as this process will pull down stuff from github.
+
+At some future point, we're going to make this process a bit more automated.
+
+2. Open a command prompt or terminal and change directory to reggie-formula.
+
+3. Run the `vagrant up` command if the vagrant machine isn't already running.
+
+4. Run `vagrant ssh` to ssh into the machine.
+
+5. Type `sudo salt reggie state.apply`. (_This may take awhile_.) This
+   will bring your deploy up to date with the latest code, apply all
+   configuration (YAML/INI) changes, install any new plugins that were
+   added, and a bunch of other stuff. It should end with a pristine copy
+   of everything deployed and ready to rock.
+
+      a. If the command times out, make a note of the job id (JID). You can
+         check for results with the following command:
+         `sudo salt-run --out highstate jobs.lookup_jid JID`
+
+6. If you are planning on running the Reggie server from inside PyCharm
+   (so you can debug it, for instance) then you'll need to turn off the
+   server which the deploy auto-starts by typing `sudo systemctl stop reggie-web`
+   from inside vagrant.  If not, skip this step.
+
+Deploy is now finished! You can close the command prompt.
+
+7. If you were working on local changes, switch back to those branches,
+   or unstash your changes.
+
+
+# Running Unit Tests
+
+You can run the test suite using `tox`.
 
 
 # sep Commands
