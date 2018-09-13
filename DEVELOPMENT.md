@@ -94,7 +94,7 @@ Deploy is now finished! You can close the command prompt.
 You can run the test suite using `tox`.
 
 
-# sep Commands
+# `sep` Commands
 
 A variety of Reggie commands are available from the command line through the
 `sep` utility. From inside vagrant, type `sep` to see a list of available
