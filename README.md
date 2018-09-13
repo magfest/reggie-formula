@@ -1,6 +1,7 @@
 # reggie-formula
 
-SaltStack formula for Reggie, MAGFest's registration and management system.
+SaltStack formula and dev environment for Reggie, MAGFest's registration
+and management system.
 
 
 # Reggie Development Environment
@@ -73,8 +74,8 @@ generate a barebones configuration.
 
 ## Common Instructions (Windows/Linux/Mac/Cygwin/MingW)
 
-1. Type ```./reggie_up.sh desired_event_name desired_event_year``` from the terminal.
-   For example, to install MAGStock, you would type: ```./reggie_up.sh stock 2018```.
+1. Type `./reggie_up.sh desired_event_name desired_event_year` from the terminal.
+   For example, to install MAGStock, you would type: `./reggie_up.sh stock 2018`.
    (_This step may take awhile._)
 2. After the install completes, you can login to Reggie with
    username 'magfest@example.com' and password 'magfest'.
@@ -84,11 +85,13 @@ Installation complete!
 
 ## To SSH into the machine
 
-From the command prompt, type ```vagrant ssh``` to access the running machine
+At the command prompt, from the project directory, type `vagrant ssh` to
+access the running machine
 
 Now that things are fully installed, check out the [development doc](DEVELOPMENT.md)
 for more info on what to do next. If you're looking for a good Integrated
-Development Environment (IDE), check out the [doc on configuring PyCharm].
+Development Environment (IDE), check out the
+[doc on configuring PyCharm](PYCHARM.md).
 
 
 ## Troubleshooting
