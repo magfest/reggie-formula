@@ -91,7 +91,7 @@ Deploy is now finished! You can close the command prompt.
 
 # Running Unit Tests
 
-You can run the test suite using `tox`.
+You can run the test suite using `tox`. You may need to `pip install tox`.
 
 
 # `sep` Commands
