@@ -88,10 +88,10 @@ Installation complete!
 At the command prompt, from the project directory, type `vagrant ssh` to
 access the running machine
 
-Now that things are fully installed, check out the [development doc](DEVELOPMENT.md)
+Now that things are fully installed, check out the [development doc](README-development.md)
 for more info on what to do next. If you're looking for a good Integrated
 Development Environment (IDE), check out the
-[doc on configuring PyCharm](PYCHARM.md).
+[doc on configuring PyCharm](README-pycharm.md).
 
 
 ## Troubleshooting
