@@ -34,7 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider :virtualbox do |vb|
         vb.memory = 1536
         vb.cpus = 2
-        vb.name = 'reggie (%s %s) %s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime('%Y-%m-%d %H:%M:%S.%L')]
+        vb.name = 'reggie.%s.%s.%s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime('%Y-%-%d.%H.%M.%S.%L')]
 
         # Allow symlinks to be created in /home/vagrant/reggie-formula.
         # Modify "home_vagrant_reggie-formula" to be different if you change the path.
@@ -79,7 +79,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         salt.install_master = true
         salt.install_type = 'git'
         salt.install_args = 'v2018.3.2'
-        salt.version = '2018.3.2'
+        #salt.version = '2018.3.2'
         salt.seed_master = {reggie: 'vagrant/vagrant/files/reggie.pub'}
         salt.master_config = 'vagrant/vagrant/files/salt_master.yaml'
         salt.minion_config = 'vagrant/vagrant/files/salt_minion.yaml'
