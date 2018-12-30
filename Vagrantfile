@@ -34,7 +34,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider :virtualbox do |vb|
         vb.memory = 1536
         vb.cpus = 2
-        vb.name = 'reggie (%s %s) %s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime('%Y-%m-%d %H.%M.%S.%L')]
+        if (host == windows)
+	    # don't use colons (:) or parens in windows filenames, will cause vagrant up to fail
+            vb.name = 'reggie %s %s %s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime('%Y-%m-%d %s')]
+        else
+            vb.name = 'reggie (%s %s) %s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime('%Y-%m-%d %H:%M:%S.%L')]
+        end if
 
         # Allow symlinks to be created in /home/vagrant/reggie-formula.
         # Modify "home_vagrant_reggie-formula" to be different if you change the path.
