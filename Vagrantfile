@@ -6,6 +6,11 @@ Vagrant.require_version '>= 2'
 ENV['EVENT_NAME'] = ENV['EVENT_NAME'] || 'super'
 ENV['EVENT_YEAR'] = ENV['EVENT_YEAR'] || '2019'
 
+if Vagrant::Util::Platform.windows?
+    ENV['IS_VAGRANT_WINDOWS'] = '1'
+else
+    ENV['IS_VAGRANT_WINDOWS'] = '0'
+end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = 'bento/ubuntu-18.04'
@@ -47,7 +52,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ['setextradata', :id, 'VBoxInternal2/SharedFoldersEnableSymlinksCreate/home_vagrant_reggie-formula', '1']
     end
 
-    config.vm.provision :shell, env: {'EVENT_NAME'=>ENV['EVENT_NAME'], 'EVENT_YEAR'=>ENV['EVENT_YEAR']}, inline: "
+    config.vm.provision :shell, env: {
+        'EVENT_NAME'=>ENV['EVENT_NAME'],
+        'EVENT_YEAR'=>ENV['EVENT_YEAR'],
+        'IS_VAGRANT_WINDOWS'=>ENV['IS_VAGRANT_WINDOWS']
+        }, inline: "
         set -e
 
         # Upgrade all packages to the latest version, commented out because it\'s very slow
@@ -78,6 +87,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         mkdir -p /etc/salt
         echo \"event_name: ${EVENT_NAME}\" >> /etc/salt/grains
         echo \"event_year: ${EVENT_YEAR}\" >> /etc/salt/grains
+        echo \"is_vagrant: 1\" >> /etc/salt/grains
+        echo \"is_vagrant_windows: ${IS_VAGRANT_WINDOWS}\" >> /etc/salt/grains
 "
 
     config.vm.provision :salt do |salt|
