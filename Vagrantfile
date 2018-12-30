@@ -34,8 +34,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider :virtualbox do |vb|
         vb.memory = 1536
         vb.cpus = 2
-        if (host == windows)
-	    # don't use colons (:) or parens in windows filenames, will cause vagrant up to fail
+        if Vagrant::Util::Platform.windows?
+            # don't use colons (:) or parens in windows filenames, will cause vagrant up to fail
             vb.name = 'reggie %s %s %s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime('%Y-%m-%d %s')]
         else
             vb.name = 'reggie (%s %s) %s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime('%Y-%m-%d %H:%M:%S.%L')]
