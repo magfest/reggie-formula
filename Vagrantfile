@@ -7,9 +7,9 @@ ENV['EVENT_NAME'] = ENV['EVENT_NAME'] || 'super'
 ENV['EVENT_YEAR'] = ENV['EVENT_YEAR'] || '2019'
 
 if Vagrant::Util::Platform.windows?
-    ENV['IS_VAGRANT_WINDOWS'] = '1'
+    ENV['IS_VAGRANT_WINDOWS'] = 'true'
 else
-    ENV['IS_VAGRANT_WINDOWS'] = '0'
+    ENV['IS_VAGRANT_WINDOWS'] = 'false'
 end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -87,7 +87,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         mkdir -p /etc/salt
         echo \"event_name: ${EVENT_NAME}\" >> /etc/salt/grains
         echo \"event_year: ${EVENT_YEAR}\" >> /etc/salt/grains
-        echo \"is_vagrant: 1\" >> /etc/salt/grains
         echo \"is_vagrant_windows: ${IS_VAGRANT_WINDOWS}\" >> /etc/salt/grains
 "
 

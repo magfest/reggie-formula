@@ -110,7 +110,7 @@ reggie virtualenv:
     - user: {{ reggie.user }}
     - python: /usr/bin/python3
     - system_site_packages: False
-    {% if grains['IS_VAGRANT_WINDOWS'] == '1' %}
+    {% if grains['IS_VAGRANT_WINDOWS'] == 'true' %}
     - env_vars:
       - VIRTUALENV_ALWAYS_COPY: 1
     {% endif %}
