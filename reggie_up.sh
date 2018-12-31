@@ -1,5 +1,12 @@
 #! /bin/bash
 
+# fail on any errors
+set -e
+
+# output all stderr and stdout to a logfile, and to the screen as well
+logfile=install.log
+exec &> >(tee -a "$logfile")
+
 if [ "$1" != "" ]; then
     EVENT_NAME=$1
 fi

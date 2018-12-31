@@ -1,6 +1,8 @@
 .vagrant/
 reggie_install/
 infrastructure/
+install.log
+.install.log.swp
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
