@@ -159,3 +159,11 @@ include:
 
 {{ encode_ini(data) }}
 {%- endmacro -%}
+
+{%- macro handle_windows_permissions() -%}
+    {% if grains['is_vagrant_windows'] | default(false) %}
+    # on windows, in vboxfs shared filesystems (used to share from win->linux), this is unchangable.
+    # set it here so that salt won't fail when it tries to save. kind of a hack, but only on vagrant so... whatever
+    - mode: 0777
+    {% endif %}
+{%- endmacro -%}
