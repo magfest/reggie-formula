@@ -159,3 +159,16 @@ include:
 
 {{ encode_ini(data) }}
 {%- endmacro -%}
+
+{#
+    On windows, in vboxfs shared filesystems (used to share from win->linux),
+    we get an error if we try to change the permissions, which salt does by
+    default when it manages a file.  The only exception is that we can set 777
+    permissions without an error.  This macro should be dropped into the middle
+    of e.g. a "file.managed" state to optionally add the mode param.
+#}
+{%- macro handle_windows_permissions() -%}
+    {% if grains['is_vagrant_windows'] | default(false) %}
+    - mode: 0777
+    {% endif %}
+{%- endmacro -%}

@@ -6,6 +6,11 @@ Vagrant.require_version '>= 2'
 ENV['EVENT_NAME'] = ENV['EVENT_NAME'] || 'super'
 ENV['EVENT_YEAR'] = ENV['EVENT_YEAR'] || '2019'
 
+if Vagrant::Util::Platform.windows?
+    ENV['IS_VAGRANT_WINDOWS'] = 'true'
+else
+    ENV['IS_VAGRANT_WINDOWS'] = 'false'
+end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = 'bento/ubuntu-18.04'
@@ -34,7 +39,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider :virtualbox do |vb|
         vb.memory = 1536
         vb.cpus = 2
-        vb.name = 'reggie (%s %s) %s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime('%Y-%m-%d %H:%M:%S.%L')]
+        if Vagrant::Util::Platform.windows?
+            # don't use colons (:) or parens in windows filenames, will cause vagrant up to fail
+            vb.name = 'reggie %s %s %s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime('%Y-%m-%d %s')]
+        else
+            vb.name = 'reggie (%s %s) %s' % [ENV['EVENT_NAME'], ENV['EVENT_YEAR'], Time.now.strftime('%Y-%m-%d %H:%M:%S.%L')]
+        end if
 
         # Allow symlinks to be created in /home/vagrant/reggie-formula.
         # Modify "home_vagrant_reggie-formula" to be different if you change the path.
@@ -42,7 +52,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ['setextradata', :id, 'VBoxInternal2/SharedFoldersEnableSymlinksCreate/home_vagrant_reggie-formula', '1']
     end
 
-    config.vm.provision :shell, env: {'EVENT_NAME'=>ENV['EVENT_NAME'], 'EVENT_YEAR'=>ENV['EVENT_YEAR']}, inline: "
+    config.vm.provision :shell, env: {
+        'EVENT_NAME'=>ENV['EVENT_NAME'],
+        'EVENT_YEAR'=>ENV['EVENT_YEAR'],
+        'IS_VAGRANT_WINDOWS'=>ENV['IS_VAGRANT_WINDOWS']
+        }, inline: "
         set -e
 
         # Upgrade all packages to the latest version, commented out because it\'s very slow
@@ -73,13 +87,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         mkdir -p /etc/salt
         echo \"event_name: ${EVENT_NAME}\" >> /etc/salt/grains
         echo \"event_year: ${EVENT_YEAR}\" >> /etc/salt/grains
+        echo \"is_vagrant_windows: ${IS_VAGRANT_WINDOWS}\" >> /etc/salt/grains
 "
 
     config.vm.provision :salt do |salt|
         salt.install_master = true
         salt.install_type = 'git'
         salt.install_args = 'v2018.3.2'
-        salt.version = '2018.3.2'
         salt.seed_master = {reggie: 'vagrant/vagrant/files/reggie.pub'}
         salt.master_config = 'vagrant/vagrant/files/salt_master.yaml'
         salt.minion_config = 'vagrant/vagrant/files/salt_minion.yaml'

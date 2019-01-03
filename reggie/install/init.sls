@@ -3,7 +3,7 @@
 # ============================================================================
 
 {%- from 'reggie/map.jinja' import reggie with context %}
-{%- from 'reggie/macros.jinja' import dump_ini with context %}
+{%- from 'reggie/macros.jinja' import dump_ini, handle_windows_permissions with context %}
 {%- set env = salt['grains.get']('env') %}
 
 
@@ -102,12 +102,18 @@ reggie chown {{ reggie.user }} {{ reggie[dir] }}:
       - reggie sideboard git latest
 {%- endfor %}
 
+# note: if running on windows+vagrant, virtualbox's shared win host -> linux vm FS implementation
+# doesn't support symlinks so we need to use VIRTUALENV_ALWAYS_COPY which causes file copies instead of symlinks
 reggie virtualenv:
   virtualenv.managed:
     - name: {{ reggie.install_dir }}/env
     - user: {{ reggie.user }}
     - python: /usr/bin/python3
     - system_site_packages: False
+    {% if grains.get('is_vagrant_windows', false) %}
+    - env:
+      - VIRTUALENV_ALWAYS_COPY: 1
+    {% endif %}
     - require:
       - pip: virtualenv
       - reggie chown {{ reggie.user }} {{ reggie.install_dir }}
@@ -121,6 +127,7 @@ reggie sideboard configuration:
         {{ dump_ini(reggie.sideboard.config)|indent(8) }}
     - template: jinja
     - show_changes: {% if env == 'dev' %}True{% else %}False{% endif %}
+    {{ handle_windows_permissions() }}
     - require:
       - reggie virtualenv
 
@@ -175,6 +182,7 @@ reggie {{ plugin_id }} configuration:
         {{ dump_ini(plugin.config)|indent(8) }}
     - template: jinja
     - show_changes: {% if env == 'dev' %}True{% else %}False{% endif %}
+    {{ handle_windows_permissions() }}
     - require:
       - reggie {{ plugin_id }} package install
 {% endif %}
@@ -197,6 +205,7 @@ reggie {{ plugin_id }} requirements update:
     - name: {{ absolute_path }}
     - user: {{ reggie.user }}
     - group: {{ reggie.group }}
+    {{ handle_windows_permissions() }}
     {% for key, value in file_spec.items() %}
     {% if key == 'contents' %}
     - contents: |
