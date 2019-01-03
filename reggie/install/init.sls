@@ -110,7 +110,7 @@ reggie virtualenv:
     - user: {{ reggie.user }}
     - python: /usr/bin/python3
     - system_site_packages: False
-    {% if grains['is_vagrant_windows'] | default(false) %}
+    {% if grains.get('is_vagrant_windows', false) %}
     - env:
       - VIRTUALENV_ALWAYS_COPY: 1
     {% endif %}
