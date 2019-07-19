@@ -147,7 +147,6 @@ reggie:
 
         out_of_shirts: False
         shirts_per_staffer: 1
-        staff_eligible_for_swag_shirt: False
         separate_staff_merch: False
 
         max_badge_sales: 2000
