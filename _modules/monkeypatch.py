@@ -13,9 +13,10 @@ def ordered_yaml():
                 keep=False,
                 normalize=False,
                 preserve_dict_class=True,
-                preserve_tuples=False):
+                preserve_tuples=False,
+                to_str=False):
             # Overridden to change default value of preserve_dict_class to True.
-            return _original_decode(data, encoding, errors, keep, normalize, preserve_dict_class, preserve_tuples)
+            return _original_decode(data, encoding, errors, keep, normalize, preserve_dict_class, preserve_tuples, to_str)
         _ordered_decode._patched = True
         salt.utils.data.decode = _ordered_decode
 
