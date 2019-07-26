@@ -9,7 +9,7 @@ base:
     - glusterfs.server
     - haproxy
     - glusterfs.client
-    - nginx.ng
+    - nginx
     - reggie.web
     - reggie_deploy.web
     - reggie_deploy.sessions
