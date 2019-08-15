@@ -319,7 +319,7 @@ reggie:
             description: >
                 We have the ability to import shifts from last year's MAGFest, if you are only
                 making minor changes and want assistance with this step, please let us know.
-            path: /jobs/index?department_id={department_id}
+            path: /shifts_admin/index?department_id={department_id}
 
         volunteer_checklist: {}
 
