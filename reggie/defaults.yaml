@@ -163,7 +163,6 @@ reggie:
 
         hide_prereg_open_date: True
 
-        mivs_video_response_expected: by September 16th
         mivs_confirm_deadline: 14
         mivs_submission_grace_period: 10
         mivs_start_year: 2013
@@ -213,13 +212,12 @@ reggie:
 
           badge_price_waived: 2099-01-07 12
 
-          mivs_round_one_deadline: 2098-09-03
-          mivs_round_two_start: 2098-10-01
-          mivs_round_two_deadline: 2098-10-09
+          mivs_start: 2098-10-01
+          mivs_deadline: 2098-09-03
           mivs_judging_deadline: 2098-10-29
-          mivs_round_two_complete: 2098-11-05
+          mivs_results_reveal: 2098-11-05
 
-          panel_app_deadline: 2098-10-31
+          panels_deadline: 2098-10-31
 
           rock_island_deadline: ''
 
@@ -321,7 +319,7 @@ reggie:
             description: >
                 We have the ability to import shifts from last year's MAGFest, if you are only
                 making minor changes and want assistance with this step, please let us know.
-            path: /jobs/index?department_id={department_id}
+            path: /shifts_admin/index?department_id={department_id}
 
         volunteer_checklist: {}
 
