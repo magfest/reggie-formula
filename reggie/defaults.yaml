@@ -33,6 +33,7 @@ reggie:
     timeout: 60  # 1 hour (in minutes)
 
   sideboard:
+    branch: master
     config:
       debug: False
       priority_plugins: ['uber']
@@ -57,6 +58,7 @@ reggie:
 
   plugins:
     ubersystem:
+      branch: master
       name: uber
       source: https://github.com/magfest/ubersystem.git
       config:
