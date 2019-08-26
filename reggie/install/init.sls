@@ -73,8 +73,8 @@ reggie sideboard git latest:
   git.latest:
     - name: https://github.com/magfest/sideboard.git
     - target: {{ reggie.install_dir }}
-    - rev: master
-    - branch: master
+    - rev: {{ reggie.sideboard.branch if reggie.sideboard.get('branch') else 'master' }}
+    - branch: {{ reggie.sideboard.branch if reggie.sideboard.get('branch') else 'master' }}
     - remote: origin
 
 reggie chown {{ reggie.user }} {{ reggie.install_dir }}:
@@ -157,8 +157,8 @@ reggie {{ plugin_id }} git latest:
     - name: {{ plugin.source }}
     - user: {{ reggie.user }}
     - target: {{ reggie.install_dir }}/plugins/{{ plugin.name }}
-    - rev: master
-    - branch: master
+    - rev: {{ plugin.branch if plugin.get('branch') else 'master' }}
+    - branch: {{ plugin.branch if plugin.get('branch') else 'master' }}
     - remote: origin
     - require:
       - reggie {{ previous_plugin_ids[loop.index0] }} requirements update
