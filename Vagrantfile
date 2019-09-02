@@ -93,7 +93,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision :salt do |salt|
         salt.install_master = true
         salt.install_type = 'git'
-        salt.install_args = 'v2018.3.2'
+        salt.install_args = 'v2019.2.0'
         salt.seed_master = {reggie: 'vagrant/vagrant/files/reggie.pub'}
         salt.master_config = 'vagrant/vagrant/files/salt_master.yaml'
         salt.minion_config = 'vagrant/vagrant/files/salt_minion.yaml'
