@@ -19,6 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.network :forwarded_port, guest: 8000, host: 8000 # haproxy http proxy
     config.vm.network :forwarded_port, guest: 4443, host: 4443 # haproxy https proxy
     config.vm.network :forwarded_port, guest: 8282, host: 8282 # cherrypy backend
+    config.vm.network :forwarded_port, guest: 8089, host: 8089 # locust performance testing (not turned on by default)
 
     config.vm.synced_folder '.', '/home/vagrant/reggie-formula', create: true
 
