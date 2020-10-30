@@ -86,7 +86,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         # Set up event grains
         mkdir -p /etc/salt
-        cat > /etc/salt/grain <<ENDGRAINS
+        cat > /etc/salt/grains <<ENDGRAINS
 event_name: ${EVENT_NAME}
 event_year: ${EVENT_YEAR}
 is_vagrant_windows: ${IS_VAGRANT_WINDOWS}
