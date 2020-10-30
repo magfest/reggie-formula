@@ -60,12 +60,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         }, inline: "
         set -e
 
-        # Upgrade all packages to the latest version, commented out because it\'s very slow
-        # export DEBIAN_FRONTEND=noninteractive
-        # export DEBIAN_PRIORITY=critical
-        # sudo -E apt-get -qy update
-        # sudo -E apt-get -qy -o 'Dpkg::Options::=--force-confdef' -o 'Dpkg::Options::=--force-confold' upgrade
-        # sudo -E apt-get -qy autoclean
+        # Upgrade all packages to the latest version - this is VERY SLOW on Windows, so Windows users are advised to comment this out
+        export DEBIAN_FRONTEND=noninteractive
+        export DEBIAN_PRIORITY=critical
+        sudo -E apt-get -qy update
+        sudo -E apt-get -qy -o 'Dpkg::Options::=--force-confdef' -o 'Dpkg::Options::=--force-confold' upgrade
+        sudo -E apt-get -qy autoclean
 
         # Install some prerequisites
         sudo -E apt-get -qy install libssh-dev python-git swapspace
@@ -86,9 +86,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         # Set up event grains
         mkdir -p /etc/salt
-        echo \"event_name: ${EVENT_NAME}\" >> /etc/salt/grains
-        echo \"event_year: ${EVENT_YEAR}\" >> /etc/salt/grains
-        echo \"is_vagrant_windows: ${IS_VAGRANT_WINDOWS}\" >> /etc/salt/grains
+        cat > /etc/salt/grains <<ENDGRAINS
+event_name: ${EVENT_NAME}
+event_year: ${EVENT_YEAR}
+is_vagrant_windows: ${IS_VAGRANT_WINDOWS}
+ENDGRAINS
 "
 
     config.vm.provision :salt do |salt|
