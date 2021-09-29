@@ -133,6 +133,13 @@ reggie sideboard configuration:
 
 reggie sideboard package install:
   pip.installed:
+    - pkgs:
+      - setuptools==57.0.0
+    - user: {{ reggie.user }}
+    - bin_env: {{ reggie.install_dir }}/env
+    - require:
+      - reggie sideboard configuration
+  pip.installed:
     - editable: file://{{ reggie.install_dir }}
     - user: {{ reggie.user }}
     - bin_env: {{ reggie.install_dir }}/env
