@@ -133,7 +133,7 @@ reggie sideboard configuration:
 
 reggie sideboard package install:
   pip.installed:
-    - editable: {{ reggie.install_dir }}
+    - editable: file://{{ reggie.install_dir }}
     - user: {{ reggie.user }}
     - bin_env: {{ reggie.install_dir }}/env
     - unless: test -f {{ reggie.install_dir }}/env/lib/python3.6/site-packages/sideboard.egg-link
