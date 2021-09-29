@@ -148,7 +148,7 @@ reggie sideboard requirements update:
     - require:
       - reggie sideboard package install
 
-{%- set previous_plugin_ids = ['sideboard'] + list(reggie.plugins.keys()) -%}
+{%- set previous_plugin_ids = ['sideboard'] + reggie.plugins.keys() | list -%}
 
 {% for plugin_id, plugin in reggie.plugins.items() %}
 
