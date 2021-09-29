@@ -131,7 +131,7 @@ reggie sideboard configuration:
     - require:
       - reggie virtualenv
 
-setuptools dowgrade:
+reggie setuptools downgrade:
   pip.installed:
     - pkgs:
       - setuptools==57.0.0
@@ -147,7 +147,7 @@ reggie sideboard package install:
     - bin_env: {{ reggie.install_dir }}/env
     - unless: test -f {{ reggie.install_dir }}/env/lib/python3.6/site-packages/sideboard.egg-link
     - require:
-      - setuptools downgrade
+      - reggie setuptools downgrade
 
 reggie sideboard requirements update:
   pip.installed:
