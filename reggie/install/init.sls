@@ -138,7 +138,7 @@ reggie setuptools downgrade:
     - pkgs:
       - setuptools==57.0.0
     - user: {{ reggie.user }}
-    - bin_env: {{ reggie.install_dir }}/env
+    - bin_env: {{ reggie.install_dir }}/env/bin/pip
     - require:
       - reggie sideboard configuration
       
@@ -146,7 +146,7 @@ reggie sideboard package install:
   pip.installed:
     - editable: file://{{ reggie.install_dir }}
     - user: {{ reggie.user }}
-    - bin_env: {{ reggie.install_dir }}/env
+    - bin_env: {{ reggie.install_dir }}/env/bin/pip
     - unless: test -f {{ reggie.install_dir }}/env/lib/python3.6/site-packages/sideboard.egg-link
     - require:
       - reggie setuptools downgrade
@@ -155,7 +155,7 @@ reggie sideboard requirements update:
   pip.installed:
     - requirements: {{ reggie.install_dir }}/requirements.txt
     - user: {{ reggie.user }}
-    - bin_env: {{ reggie.install_dir }}/env
+    - bin_env: {{ reggie.install_dir }}/env/bin/pip
     - require:
       - reggie sideboard package install
 
@@ -178,7 +178,7 @@ reggie {{ plugin_id }} package install:
   pip.installed:
     - editable: {{ reggie.install_dir }}/plugins/{{ plugin.name }}
     - user: {{ reggie.user }}
-    - bin_env: {{ reggie.install_dir }}/env
+    - bin_env: {{ reggie.install_dir }}/env/bin/pip
     - unless: test -f {{ reggie.install_dir }}/env/lib/python3.6/site-packages/{{ plugin.name }}.egg-link
     - require:
       - reggie {{ plugin_id }} git latest
@@ -202,7 +202,7 @@ reggie {{ plugin_id }} requirements update:
   pip.installed:
     - requirements: {{ reggie.install_dir }}/plugins/{{ plugin.name }}/requirements.txt
     - user: {{ reggie.user }}
-    - bin_env: {{ reggie.install_dir }}/env
+    - bin_env: {{ reggie.install_dir }}/env/bin/pip
     - onlyif: grep -q -s '[^[:space:]]' {{ reggie.install_dir }}/plugins/{{ plugin.name }}/requirements.txt
     - require:
       - reggie {{ plugin_id }} package install
