@@ -22,6 +22,7 @@ reggie python install:
       - python3
       - python3-pip
       - python3-tk
+      - virtualenv
       - libpq-dev        # for psycopg
       - build-essential  # for python-prctl
       - libcap-dev       # for python-prctl
@@ -109,6 +110,7 @@ reggie virtualenv:
     - name: {{ reggie.install_dir }}/env
     - user: {{ reggie.user }}
     - python: /usr/bin/python3
+    - venv_bin: /usr/bin/virtualenv
     - system_site_packages: False
     {% if grains.get('is_vagrant_windows', false) %}
     - env:
