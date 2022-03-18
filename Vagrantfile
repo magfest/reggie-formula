@@ -68,7 +68,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         sudo -E apt-get -qy autoclean
 
         # Install some prerequisites
-        sudo -E apt-get -qy install libssh-dev python-git swapspace
+        sudo -E apt-get -qy install libssh-dev python-git swapspace python3-pygit2
 
         # Create a sparse checkout of the infrastructure repo with only the reggie_config and reggie_state dirs
         if [ ! -d '/home/vagrant/reggie-formula/infrastructure/.git' ]; then
