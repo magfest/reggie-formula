@@ -69,11 +69,15 @@ reggie.service:
     - watch_any:
       - file: reggie.service
 
-git ceiling directory workaround:
+set root home envvar:
   environ.setenv:
-    - name: GIT_CEILING_DIRECTORIES
-    - value: '/srv/reggie'
+    - name: HOME
+    - value: '/root'
     - update_minion: True
+
+set git safe directory for reggie install dir:
+  cmd.run:
+    - 'git config --global --add safe.directory '{{ reggie.install_dir }}
 
 reggie sideboard git latest:
   git.latest:
