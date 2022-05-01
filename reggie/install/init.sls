@@ -72,7 +72,7 @@ reggie.service:
 git ceiling directory workaround:
   environ.setenv:
     - name: GIT_CEILING_DIRECTORIES
-    - value: /srv/reggie
+    - value: '/srv/reggie'
     - update_minion: True
 
 reggie sideboard git latest:
