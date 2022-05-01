@@ -76,8 +76,10 @@ set root home envvar:
     - update_minion: True
 
 set git safe directory for reggie install dir:
-  cmd.run:
-    - 'git config --global --add safe.directory '{{ reggie.install_dir }}
+  git.config_set:
+    - name: safe.directory
+    - value: {{ reggie.install_dir }}
+    - global: True
 
 reggie sideboard git latest:
   git.latest:
